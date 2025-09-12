@@ -1,16 +1,20 @@
 import { Eye, EyeOff, Lock, User } from 'lucide-react';
 import React, { useState } from 'react';
+import type { components } from '../../api-types/userService';
+import { useUser } from '../../context/UserContext';
 import { useAppNavigation } from '../../hooks/useAppNavigation';
-import apiClient from '../../services/apiClient';
 
 const Login: React.FC = () => {
   const { goToRegister } = useAppNavigation();
   const { goToForgotPassword } = useAppNavigation();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<components['schemas']['LoginRequest']>({
     username: '',
-    password: ''
+    password: '',
+    deviceName: String(window.navigator.platform),
+    deviceType: 'web',
   });
+  const { login, error: userError, loading: userLoading } = useUser();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -20,31 +24,16 @@ const Login: React.FC = () => {
     }));
   };
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // ...existing code...
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      // Spec: /api/v1/user-service/auth/login POST
-      // Body: { username, password, deviceName, deviceType }
-      const payload = {
-        username: formData.username,
-        password: formData.password,
-        deviceName: window.navigator.platform,
-        deviceType: 'web',
-      };
-      const res = await apiClient.post('/api/v1/user-service/auth/login', payload);
-      // Xử lý response thành công
-      console.log('Login success:', res.data);
-      // TODO: Lưu token, chuyển hướng, ...
-    } catch (err: any) {
-      setError(err?.response?.data?.message || 'Login failed');
-    } finally {
-      setLoading(false);
-    }
+    await login({
+      username: formData.username || '',
+      password: formData.password || '',
+      deviceName: formData.deviceName || '',
+      deviceType: formData.deviceType || '',
+    });
   };
 
 
@@ -60,8 +49,8 @@ const Login: React.FC = () => {
             </div>
             <form onSubmit={handleSubmit} className="space-y-6 w-full">
               {/* Hiển thị lỗi nếu có */}
-              {error && (
-                <div className="text-red-500 text-sm text-center mb-2">{error}</div>
+              {userError && (
+                <div className="text-red-500 text-sm text-center mb-2">{userError}</div>
               )}
               {/* Username Input */}
               <div>
@@ -122,9 +111,9 @@ const Login: React.FC = () => {
               <button
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors duration-200"
-                disabled={loading}
+                disabled={userLoading}
               >
-                {loading ? 'Signing In...' : 'Sign In'}
+                {userLoading ? 'Signing In...' : 'Sign In'}
               </button>
               {/* Divider */}
               <div className="relative my-6">

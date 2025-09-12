@@ -1,6 +1,8 @@
 import { Mail } from 'lucide-react';
 import React, { useState } from 'react';
+import type { components } from '../../api-types/userService';
 import { useAppNavigation } from '../../hooks/useAppNavigation';
+import apiClient from '../../services/apiClient';
 
 const ForgotPassword: React.FC = () => {
   const { goToLogin } = useAppNavigation();
@@ -8,7 +10,8 @@ const ForgotPassword: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ...existing code...
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
       setError('Email is required');
@@ -18,8 +21,16 @@ const ForgotPassword: React.FC = () => {
       return;
     }
     setError('');
-    setSubmitted(true);
-    // Handle forgot password logic here
+  // ...existing code...
+    try {
+      const payload: components['schemas']['ForgotPwdRequest'] = { email };
+      await apiClient.post<components['schemas']['ApiResponseString']>('/api/v1/user-service/auth/forgot-password', payload);
+      setSubmitted(true);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || 'Request failed');
+    } finally {
+      // ...existing code...
+    }
   };
 
   return (
