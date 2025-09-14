@@ -3,12 +3,21 @@ import React, { useState } from 'react';
 import type { components } from '../../api-types/userService';
 import { useAppNavigation } from '../../hooks/useAppNavigation';
 import apiClient from '../../services/apiClient';
+import { useUser } from '../../context/UserContext';
 
 const ForgotPassword: React.FC = () => {
   const { goToLogin } = useAppNavigation();
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const { isAuthenticated } = useUser();
+  const { goHome } = useAppNavigation();
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      goHome();
+    }
+  }, [isAuthenticated, goHome]);
 
   // ...existing code...
   const handleSubmit = async (e: React.FormEvent) => {

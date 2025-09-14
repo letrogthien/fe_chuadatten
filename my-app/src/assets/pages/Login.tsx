@@ -14,7 +14,14 @@ const Login: React.FC = () => {
     deviceName: String(window.navigator.platform),
     deviceType: 'web',
   });
-  const { login, error: userError, loading: userLoading } = useUser();
+  const { login, error: userError, loading: userLoading, isAuthenticated } = useUser();
+  const { goHome } = useAppNavigation();
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      goHome();
+    }
+  }, [isAuthenticated, goHome]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,6 +41,7 @@ const Login: React.FC = () => {
       deviceName: formData.deviceName || '',
       deviceType: formData.deviceType || '',
     });
+  
   };
 
 

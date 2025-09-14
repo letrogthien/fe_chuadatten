@@ -1,9 +1,11 @@
 // MainBar.tsx
 import { MessageSquare, Search, User } from 'lucide-react';
+import { useUser } from '../../context/UserContext';
 import { useAppNavigation } from '../../hooks/useAppNavigation';
 
 const MainBar: React.FC = () => {
-  const { goHome, goToLogin, goToRegister, isLoginPage } = useAppNavigation();
+    const { goHome, goToLogin, goToRegister, isLoginPage, goToUserInfo, gotoUserCenter } = useAppNavigation();
+    const { isAuthenticated, user } = useUser();
 
 
   return (
@@ -32,22 +34,32 @@ const MainBar: React.FC = () => {
 
                 {/* Action Buttons: Login, Register, Cart, Messages. Login/Register hidden on extra small screens. */}
                 <div className="flex items-center space-x-6 flex-shrink-0 text-gray-700">
-                    {!isLoginPage() ? (
-                        <button 
-                            onClick={goToLogin}
+                    {isAuthenticated ? (
+                        <button
+                            onClick={gotoUserCenter}
                             className="hidden sm:flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md px-1 py-0.5"
                         >
-                            <User className="w-5 h-5" /> {/* User icon */}
-                            <span>Login</span>
+                            <User className="w-5 h-5" />
+                            <span>{user?.displayName || 'User'}</span>
                         </button>
                     ) : (
-                        <button 
-                            onClick={goToRegister}
-                            className="hidden sm:flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md px-1 py-0.5"
-                        >
-                            <User className="w-5 h-5" /> {/* User icon */}
-                            <span>Register</span>
-                        </button>
+                        !isLoginPage() ? (
+                            <button 
+                                onClick={goToLogin}
+                                className="hidden sm:flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md px-1 py-0.5"
+                            >
+                                <User className="w-5 h-5" />
+                                <span>Login</span>
+                            </button>
+                        ) : (
+                            <button 
+                                onClick={goToRegister}
+                                className="hidden sm:flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md px-1 py-0.5"
+                            >
+                                <User className="w-5 h-5" />
+                                <span>Register</span>
+                            </button>
+                        )
                     )}
                     <button className="relative hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md p-1">
                         <MessageSquare className="w-6 h-6" />

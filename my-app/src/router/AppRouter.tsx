@@ -1,9 +1,13 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from '../Layout';
+import ActivateAccount from '../assets/pages/ActivateAccount';
 import ForgotPassword from '../assets/pages/ForgotPassword';
 import Home from '../assets/pages/Home';
 import Login from '../assets/pages/Login';
+import LogoutAll from '../assets/pages/LogoutAll';
 import Register from '../assets/pages/Register';
+import UserCenter from '../assets/pages/UserCenter';
+import UserInfo from '../assets/pages/UserInfo';
 import { ROUTES } from '../constants/routes';
 
 // Error boundary component
@@ -48,6 +52,22 @@ const router = createBrowserRouter([
         path: "forgot-password",
         element: <ForgotPassword />,
       },
+      {
+        path: ROUTES.USER_INFO.replace(/^\//, ""),
+        element: <UserInfo />,
+      },
+      {
+        path: "activate",
+        element: <ActivateAccount />,
+      },
+      {
+        path: "logout-all",
+        element: <LogoutAll />,
+      },
+      {
+        path: "user-center",
+        element: <UserCenter />,
+      },
       // Add more routes here as needed
       // {
       //   path: "profile",
@@ -61,8 +81,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-// Router provider component
-const AppRouter = () => {
+
+const AppRouter: React.FC = () => {
   return <RouterProvider router={router} />;
 };
 

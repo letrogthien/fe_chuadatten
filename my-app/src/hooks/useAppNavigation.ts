@@ -60,7 +60,13 @@ export const useAppNavigation = () => {
 
   /**
    * Check if current route matches the given route
+  /**
+   * Navigate to user info page
    */
+  const goToUserInfo = () => {
+    navigate(ROUTES.USER_INFO);
+  };
+  
   const isCurrentRoute = (route: RoutePath): boolean => {
     return location.pathname === route;
   };
@@ -79,6 +85,13 @@ export const useAppNavigation = () => {
     return isCurrentRoute(ROUTES.HOME);
   };
 
+  /**
+   * Navigate to user center page
+   */
+  const gotoUserCenter = () => {
+    navigate(ROUTES.USER_CENTER);
+  }
+
   return {
     // Navigation methods
     navigateTo,
@@ -91,6 +104,9 @@ export const useAppNavigation = () => {
     
     // Route checking methods
     isCurrentRoute,
+    goToUserInfo,
+    gotoUserCenter,
+
     isLoginPage,
     isHomePage,
     
