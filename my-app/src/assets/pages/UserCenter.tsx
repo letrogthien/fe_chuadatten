@@ -4,14 +4,14 @@ import { useAppNavigation } from '../../hooks/useAppNavigation';
 import AccountSettings from './AccountSettings';
 
 const SIDEBAR_ITEMS = [
-  { key: 'buy', label: 'Buy', icon: '🛒' },
-  { key: 'seller', label: 'Seller Center', icon: '🏪' },
-  { key: 'dispute', label: 'Dispute Center', icon: '⚖️' },
-  { key: 'ticket', label: 'Service Ticket', icon: '🎫' },
-  { key: 'announcement', label: 'Announcement', icon: '📢' },
-  { key: 'coupon', label: 'Coupon', icon: '🎟️' },
-  { key: 'affiliate', label: 'Affiliate Program', icon: '🤝' },
-  { key: 'settings', label: 'Settings', icon: '⚙️',
+  { key: 'buy', label: 'Buy', icon: '' },
+  { key: 'seller', label: 'Seller Center', icon: '' },
+  { key: 'dispute', label: 'Dispute Center', icon: '' },
+  { key: 'ticket', label: 'Service Ticket', icon: '' },
+  { key: 'announcement', label: 'Announcement', icon: '' },
+  { key: 'coupon', label: 'Coupon', icon: '' },
+  { key: 'affiliate', label: 'Affiliate Program', icon: '' },
+  { key: 'settings', label: 'Settings', icon: '',
     children: [
       { key: 'account', label: 'Account Settings' },
       { key: 'security', label: 'Security Settings' },

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import type { components } from '../../api-types/userService';
+import { useUser } from '../../context/UserContext';
 import apiClient from '../../services/apiClient';
 
 const UserPreferences: React.FC = () => {
@@ -7,12 +8,13 @@ const UserPreferences: React.FC = () => {
   const [form, setForm] = useState<components['schemas']['UpdatePreferenceRequest']>({});
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const { auth } = useUser();
 
   useEffect(() => {
     const fetchPreferences = async () => {
       setLoading(true);
       try {
-        const res = await apiClient.get('/api/v1/user-service/users/me/preferences');
+        const res = await apiClient.get(`/api/v1/user-service/users/preferences/${auth?.id}`);
         setPreferences(res.data.data);
         setForm({
           notificationEmail: res.data.data.notificationEmail,
@@ -22,7 +24,7 @@ const UserPreferences: React.FC = () => {
           privacyPublicProfile: res.data.data.privacyPublicProfile,
         });
       } catch (err: any) {
-        setMessage('Không lấy được preferences');
+        setMessage('Không lấy được preferences' + err?.response?.data?.message);
       } finally {
         setLoading(false);
       }
