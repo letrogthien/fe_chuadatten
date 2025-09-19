@@ -1,0 +1,593 @@
+.newPhoneSearchButton{
+    display: none;
+}
+
+.mainSearchBar{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    flex: 1;
+    padding: 0;
+    margin-right: 30px;
+    /*position: relative;*/
+}
+.mainSearchBar .searchContainer{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    position: relative;
+    max-width: 620px;
+    width: 100%;
+}
+.mainSearchBar .searchContainer .backCloseBtn{
+    display: none;
+}
+.mainSearchBar .searchContainer .formBox{
+    display: flex;
+    flex: 1;
+    position: relative;
+}
+.mainSearchBar .searchContainer .formBox .formIn{
+    border: 1px solid #caccd4;
+    border-radius: .35rem 0 0 .35rem;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    color: #212529;
+    outline: 0;
+    padding: 0 15px;
+}
+.mainSearchBar .searchContainer .formBox .clearInputBoxIconBtn{
+    border: 0;
+    background: none;
+    color: #7c8389;
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    top: 6px;
+    right: 0px;
+    display: none;
+    z-index: 2;
+}
+
+/* Select */
+.mainSearchBar .searchContainer .selectBox{
+    display: flex;
+    width: 145px;
+    height: 40px;
+    border-top: 1px solid #caccd4;
+    border-bottom: 1px solid #caccd4;
+    border-right: 1px solid #caccd4;
+}
+.mainSearchBar .searchContainer .selectBox .custom-select {
+    position: relative;
+    width: 100%;
+}
+.mainSearchBar .searchContainer .selectBox .select-btn {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    padding: 5px 15px;
+    line-height: 28px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+.mainSearchBar .searchContainer .selectBox .select-btn .arrowIcon{
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    font-size: .875rem;
+    color: #999;
+}
+.mainSearchBar .searchContainer .selectBox .select-options {
+    border-radius: .35rem;
+    position: absolute;
+    top: 107%;
+    left: 0;
+    display: none;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 6px 16px 0px;
+    width: 187px;
+    padding: 10px 0;
+    z-index: 2;
+    font-size: var(--zu-font-size-sm);
+}
+.mainSearchBar .searchContainer .selectBox .select-options .li-item {
+    padding: 5px 20px 5px 35px;
+    cursor: pointer;
+    position: relative;
+}
+.mainSearchBar .searchContainer .selectBox .select-options .li-item:hover {
+    background-color: #f0f0f0;
+}
+.mainSearchBar .searchContainer .selectBox .select-options .li-item svg{
+    display: none;
+    font-size: .75rem;
+    vertical-align: 0;
+    position: absolute;
+    top: 8px;
+    left: 18px;
+}
+.mainSearchBar .searchContainer .selectBox .select-options .hrLine{
+    color: #9b9b9b;
+    border-bottom: 1px solid rgb(224, 224, 224);
+    position: relative;
+    margin: 4px 0 13px;
+    padding: 5px 20px 5px 35px;
+}
+.mainSearchBar .searchContainer .selectBox .select-options .active svg{
+    display: inline-block;
+}
+.mainSearchBar .searchContainer .selectBox .select-options .hrLine .smallText{
+    left: 30px;
+    position: absolute;
+    top: 2px;
+    background-color: white;
+    padding: 0px 5px;
+    color: rgba(0, 0, 0, 0.54);
+}
+.mainSearchBar .searchContainer .selectBox .select-options .hrLine:hover{
+    background: none;
+    cursor: auto;
+}
+
+/* Search Button */
+.mainSearchBar .searchContainer .iconBox{
+    display: flex;
+    width: 42px;
+}
+.mainSearchBar .searchContainer .iconBox .sBtn{
+    background-color: #e03d26;
+    border-radius: 0 .35rem .35rem 0;
+    border: 0;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.15rem;
+    width: 100%;
+    height: 40px;
+    -webkit-text-size-adjust: none;
+}
+.mainSearchBar .searchContainer .iconBox .sBtn svg{
+    font-size: 1.15rem;
+}
+
+/* 搜索下拉框 */
+.mainSearchBar .resultsDropdown{
+    background-color: white;
+    border: 1px solid #caccd4;
+    border-radius: 0;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    /*height: 500px;*/
+    position: absolute;
+    top: 100%;
+    left: 0;
+    padding: 15px 15px 10px 15px;
+    font-family: Arial;
+    /*max-height: 480px;*/
+    /*overflow-y: auto;*/
+}
+.mainSearchBar .resultsDropdown::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.mainSearchBar .resultsDropdown::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background-color: #99a9bf;
+}
+
+.mainSearchBar .resultsDropdown::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    background-color: #d3dce6;
+}
+
+/* 搜索下拉 主体 */
+.mainSearchBar .resultsDropdown .mainBody{
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    width: 1344px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0 auto;
+    flex: initial;
+    height: 100%;
+    text-align: left;
+    font-size: var(--zu-font-size-sm);
+}
+.mainSearchBar .resultsDropdown .mainBody .bTitle{
+    font-weight: normal;
+    font-size: var(--zu-font-size-lg);
+    width: 100%;
+    margin-top: 0;
+    font-family: Roboto;
+    text-transform: uppercase;
+    color: #f94032;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer{
+    width: 100%;
+}
+
+/* 搜索游戏列表 */
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl{
+    /*border-bottom: 1px solid #e0e0e0;*/
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -5px;
+    /*padding: 0;*/
+    list-style-type: none;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    font-family: nunito-regular;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi{
+    /*border-top: 1px solid #f8f8f8;*/
+    width: 33.333333%;
+    padding: 10px 5px;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi:hover{
+    /*box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;*/
+    /*border-radius: .35rem;*/
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi:hover .gameTitle{
+    /*background-color: #f9f9fb;*/
+    color: #f94032;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi .itemBox{}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi .itemBox .gameTitle{
+    font-weight: normal;
+    font-size: var(--zu-body-font-size);
+    font-family: Roboto;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi .itemBox .gameSubBox{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    margin-left: -2px;
+    margin-right: -2px;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi .itemBox .gameSubBox .itemLabel{
+    padding: 2px;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi .itemBox .gameSubBox .itemLabel .itemsLink{
+    border-radius: .25rem;
+    color: #212529;
+    display: flex;
+    /*flex-wrap: wrap;*/
+    align-items: center;
+    background: #f9f9f9;
+    padding: 3px 5px 3px 4px;
+    line-height: 1;
+    font-size: var(--zu-font-size-md);
+    transition: all 0.3s ease;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi .itemBox .gameSubBox .itemLabel .itemsLink .itemPic{
+    background-color: #eee;
+    border-radius: .15rem;
+    width: 18px;
+    height: 18px;
+    overflow: hidden;
+    margin-right: 4px;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi .itemBox .gameSubBox .itemLabel .itemsLink .itemPic img{
+    width: 100%;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi .itemBox .gameSubBox .itemLabel .itemsLink .itemTxt{
+    flex: 1;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi:hover .itemBox .gameSubBox .itemLabel .itemsLink{
+    background-color: #f2f2f2;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi .itemBox .gameSubBox .itemLabel .itemsLink:hover, .mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink:hover{
+    background-color: #f8f8f9;
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+    color: #111;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink:hover .pTitle{
+    color: #111!important;
+}
+
+/* 搜索产品列表 */
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+    padding: 0;
+    list-style-type: none;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi{
+    padding: 10px 15px;
+    /*border-bottom: 1px solid #e0e0e0;*/
+    /*width: 100%;*/
+    /*margin-right: 14px;*/
+    width: 33.3333333%;
+}
+/* 产品链接 */
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink{
+    display: flex;
+    flex-wrap: wrap;
+    /*align-items: flex-start;*/
+    align-items: center;
+    font-family: nunito-regular;
+    background-color: #f7f8f9;
+    border-radius: .375rem;
+    padding-right: 15px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+    transition: all 0.3s ease;
+    min-height: 80px;
+}
+/* 产品图 */
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink .productImg{
+    border: 1px solid #e0e0e0;
+    border-radius: .25rem 0 0 .25rem;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink .productImg .imgIn{
+    border-radius: .25rem 0 0 .25rem;
+    /*max-width: 100%;*/
+    /*max-height: 100%;*/
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+/* 产品文字信息 */
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink .productTextInfo{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    flex: 2 1 0%;
+    padding-left: 15px;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink .productTextInfo .smallLabel{
+    color: #757575;
+    font-size: 11px;
+    display: none;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink .productTextInfo .pTitle{
+    width: 100%;
+    font-weight: normal;
+    font-size: 13px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #414245;
+}
+/* 产品价格 */
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink .productPriceBox{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    flex: 1 1 0%;
+    margin-left: auto;
+    text-align: right;
+    /*padding-right: 15px;*/
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink .productPriceBox .salePrice{
+    font-size: 14px;
+    font-weight: normal;
+    width: 100%;
+    text-align: right;
+    line-height: 1;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink .productPriceBox .originalPrice{
+    color: #888;
+    font-size: 1rem;
+    width: 100%;
+    padding: 0;
+    text-align: right;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink .productPriceBox .discountRate{
+    border: 1px solid #d72f1e;
+    background-color: #f9e9e7;
+    border-radius: .25rem;
+    color: #d72f1e;
+    padding: 3px 6px;
+    line-height: 1;
+    margin-left: auto;
+    font-weight: 700;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink.soldOut{
+    position: relative;
+    filter: grayscale(50%);
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink.soldOut::before{
+    content: '';
+    background-color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    top: 0;
+    left: 0;
+}
+.mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi .productLink.soldOut:hover{
+    box-shadow: none!important;
+}
+
+/* 搜索下拉 侧边栏 */
+.mainSearchBar .resultsDropdown .sidebar{
+    border-left: 1px solid #e0e0e0;
+    display: flex;
+    flex-wrap: wrap;
+    width: 200px;
+    height: 100%;
+    padding-left: 15px;
+    text-align: left;
+}
+.mainSearchBar .resultsDropdown .sidebar .popBox{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.mainSearchBar .resultsDropdown .sidebar .popBox .sTitle{
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 7px;
+}
+.mainSearchBar .resultsDropdown .sidebar .popBox .popListUl{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    width: 100%;
+}
+.mainSearchBar .resultsDropdown .sidebar .popBox .popListUl .itemLi{
+    padding: 2px 0;
+    line-height: 1.2;
+}
+
+/* 搜索下拉 底部 */
+.mainSearchBar .resultsDropdown .footWrap{
+    /*border-top: 1px solid #e0e0e0;*/
+    /*margin-top: 10px;*/
+    /*padding-top: 10px;*/
+    text-align: center;
+    font-weight: normal;
+    font-size: var(--zu-body-font-size);
+    color: #d72f1e;
+    width: 100%;
+    margin: 10px 0;
+}
+.mainSearchBar .resultsDropdown .footWrap a, .mainSearchBar .resultsDropdown .viewMoreBtnBar a{
+    color: #d72f1e;
+    text-decoration: none;
+    border: 1px solid #d72f1e;
+    border-radius: 99rem;
+    padding: 7px 15px;
+    margin-top: 10px;
+}
+.mainSearchBar .resultsDropdown .footWrap a:hover, .mainSearchBar .resultsDropdown .viewMoreBtnBar a:hover{
+    background-color: #fff7f7;
+}
+
+/* 显示和隐藏 */
+.dropdownContainerWrapper{
+    display: none!important;
+}
+.dropdownContainerWrapper.show{
+    display: flex!important;
+}
+
+.viewMoreBtnBar{
+    display: flex;
+    justify-content: center;
+    margin-top: -15px;
+    margin-bottom: 10px;
+}
+.viewMoreBtnBar a{
+    font-size: var(--zu-font-size-lg);
+    margin-top: 0!important;
+}
+
+/* 手机 */
+@media (max-width: 767.98px) {
+
+    .mainSearchBar .searchContainer .iconBox .sBtn{
+        font-size: 1.15rem!important;
+        -webkit-text-size-adjust: none;
+        max-width: none;
+    }
+    .mainSearchBar .searchContainer .iconBox .sBtn svg{
+        font-size: 1.15rem!important;
+        transform: scale(1.1);
+        min-width: 1rem;
+        min-height: 1rem;
+    }
+
+    .mainSearchBar .resultsDropdown .mainBody .productContainer .productListUl .productItemLi{
+        width: 100%;
+    }
+
+    .newPhoneSearchButton{
+        border: 0;
+        background: #333;
+        border-radius: 50px;
+        font-size: 18px;
+        padding: 0;
+        margin: 0 15px 0 0;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+    }
+
+    .mainSearchBar{
+        background: #111;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        position: fixed;
+        z-index: 999999;
+        width: 100%;
+        margin: 0;
+        top: 44px;
+        left: 0;
+        padding: 7px 15px;
+    }
+    .mainSearchBar .searchContainer{
+        width: 90%;
+        margin-left: auto;
+    }
+    .mainSearchBar .searchContainer .backCloseBtn{
+        background-color: #111;
+        border: 0;
+        color: white;
+        width: 38px;
+        height: 38px;
+        font-size: 1.25rem;
+        display: block;
+    }
+    .mainSearchBar .searchContainer .selectBox{
+        display: none;
+    }
+    .mainSearchBar .resultsDropdown .sidebar{
+        display: none;
+    }
+    .mainSearchBar .searchContainer .formBox .formIn{
+        height: 30px;
+        border-radius: 99rem 0 0 99rem;
+    }
+    .mainSearchBar .searchContainer .iconBox{
+        width: 36px;
+    }
+    .mainSearchBar .searchContainer .iconBox .sBtn{
+        height: 30px;
+        border-radius: 0 99rem 99rem 0;
+    }
+
+    /* 手机版下拉框样式 */
+    .mainSearchBar .resultsDropdown{
+        border-radius: 0;
+        top: 89px;
+        position: fixed;
+        height: 100%;
+        overflow-y: auto;
+        /*padding-bottom: 100px;*/
+        padding: 0 0 100px 0;
+    }
+    .mainSearchBar .resultsDropdown .mainBody{
+        height: fit-content;
+    }
+    .mainSearchBar .resultsDropdown .mainBody .productContainer .gameListUl .gameItemLi{
+        width: 100%;
+    }
+    .mainSearchBar .resultsDropdown .mainBody .bTitle{
+        margin-top: 10px;
+    }
+}

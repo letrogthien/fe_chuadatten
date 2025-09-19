@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:#FFFFFF;}
+</style>
+<radialGradient id="SVGID_1_" cx="17.8439" cy="-3.463890e-02" r="59.8337" gradientTransform="matrix(1 0 0 -1 0 48)" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFDD55"/>
+	<stop  offset="0.328" style="stop-color:#FF543F"/>
+	<stop  offset="0.348" style="stop-color:#FC5245"/>
+	<stop  offset="0.504" style="stop-color:#E64771"/>
+	<stop  offset="0.643" style="stop-color:#D53E91"/>
+	<stop  offset="0.761" style="stop-color:#CC39A4"/>
+	<stop  offset="0.841" style="stop-color:#C837AB"/>
+</radialGradient>
+<circle class="st0" cx="24" cy="24" r="24"/>
+<path class="st1" d="M24,31c-3.9,0-7-3.1-7-7s3.1-7,7-7s7,3.1,7,7S27.9,31,24,31z M24,19c-2.8,0-5,2.2-5,5s2.2,5,5,5s5-2.2,5-5
+	S26.8,19,24,19z"/>
+<circle class="st1" cx="31.5" cy="16.5" r="1.5"/>
+<path class="st1" d="M30,37H18c-3.9,0-7-3.1-7-7V18c0-3.9,3.1-7,7-7h12c3.9,0,7,3.1,7,7v12C37,33.9,33.9,37,30,37z M18,13
+	c-2.8,0-5,2.2-5,5v12c0,2.8,2.2,5,5,5h12c2.8,0,5-2.2,5-5V18c0-2.8-2.2-5-5-5H18z"/>
+</svg>

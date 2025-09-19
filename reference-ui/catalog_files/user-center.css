@@ -1,0 +1,2577 @@
+/* 面包屑导航 */
+.breadcrumb-nav {
+    background: #f7f7fa;
+    border-top: 1px solid var(--zu-gray-200);
+    border-bottom: 1px solid var(--zu-gray-200);
+    border: 0;
+}
+
+/* https://github.com/floating-ui/floating-ui/tree/v2.x */
+.zu-tooltips {
+    background: #333;
+    color: white;
+    font-weight: normal;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    display: none;
+    z-index: 3;
+    max-width: 25rem;
+}
+.zu-tooltips a{
+    color: var(--zu-danger);
+}
+.zu-tooltips[data-show] {
+    display: block;
+}
+.zu-arrows,
+.zu-arrows::before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+}
+.zu-arrows {
+    visibility: hidden;
+}
+.zu-arrows::before {
+    visibility: visible;
+    content: '';
+    transform: rotate(45deg);
+}
+.zu-tooltips[data-popper-placement^='top'] > .zu-arrows {
+    bottom: -4px;
+}
+.zu-tooltips[data-popper-placement^='bottom'] > .zu-arrows {
+    top: -4px;
+}
+.zu-tooltips[data-popper-placement^='left'] > .zu-arrows {
+    right: -4px;
+}
+.zu-tooltips[data-popper-placement^='right'] > .zu-arrows {
+    left: -4px;
+}
+
+/* Color */
+:root{
+    --zu-blue: #0d6efd;
+    --zu-indigo: #6610f2;
+    --zu-purple: #6f42c1;
+    --zu-pink: #d63384;
+    --zu-red: #e23822;
+    --zu-orange: #fd7e14;
+    --zu-yellow: #ffc107;
+    --zu-green: #198754;
+    --zu-teal: #20c997;
+    --zu-cyan: #0dcaf0;
+    --zu-black: #000;
+    --zu-white: #fff;
+    --zu-gray: #6c757d;
+    --zu-gray-dark: #343a40;
+    --zu-gray-100: #f8f9fa;
+    --zu-gray-200: #e9ecef;
+    --zu-gray-300: #dee2e6;
+    --zu-gray-400: #ced4da;
+    --zu-gray-500: #adb5bd;
+    /*--zu-gray-600: #6c757d;*/
+    --zu-gray-600: #94989c;
+    --zu-gray-700: #495057;
+    --zu-gray-800: #343a40;
+    --zu-gray-900: #212529;
+    --zu-primary: #0d6efd;
+    --zu-secondary: #6c757d;
+    --zu-success: #198754;
+    --zu-info: #0dcaf0;
+    --zu-warning: #ffc107;
+    --zu-danger: #ee3524;
+    --zu-light: #f8f9fa;
+    --zu-dark: #131313;
+
+    --zu-light-yellow:#fff900;
+
+    --zu-border-radius: 0.375rem;
+    --zu-border-radius-sm: 0.25rem;
+    --zu-border-radius-lg: 0.65rem;
+    --zu-border-radius-xl: 1rem;
+    --zu-border-radius-xxl: 2rem;
+    --zu-border-radius-max: 99rem;
+
+    --zu-border-line:1px solid #00000028;
+
+    --zu-gray-wrap:#f6f8f9;
+    --zu-gray-block:#e5ebee;
+    --zu-gray-block-hover:#dbe4e9;
+}
+
+/* Size */
+.w-100{
+    width: 100%!important;
+}
+
+/* Form */
+.zu-form-control{
+    border: var(--zu-border-line);
+    border-radius: 0;
+    display: block;
+    width: 100%;
+    padding: .6rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+}
+.zu-form-control:focus{
+    border: 1px solid var(--zu-gray-400);
+    outline: 3px solid rgba(255, 210, 0, 0.5);
+}
+
+/* Text */
+.zu-text-align-right{
+    text-align: right;
+}
+.zu-text-align-center{
+    text-align: center;
+}
+.text-danger{
+    color: var(--zu-danger)!important;
+}
+.text-danger:hover{
+    color: var(--zu-danger)!important;
+    opacity: .85;
+}
+/* Text Grey */
+.text-grey-500{
+    color: var(--zu-gray-500);
+}
+.text-grey-600{
+    color: var(--zu-gray-600);
+}
+.text-grey-700{
+    color: var(--zu-gray-700);
+}
+.text-grey-800{
+    color: var(--zu-gray-800);
+}
+.text-grey-900{
+    color: var(--zu-gray-900);
+}
+
+/* Font */
+.font-weight-strong{
+    font-weight: 700!important;
+}
+.font-weight-normal{
+    font-weight: normal!important;
+}
+
+/* Font Size */
+.zu-font-size-sm{
+    font-size: .875rem;
+}
+.zu-font-size-md{
+    font-size: 1rem;
+}
+.zu-font-size-lg{
+    font-size: 1.5rem;
+}
+.zu-font-size-xl{
+    font-size: 1.875rem;
+}
+.zu-font-size-xxl{
+    font-size: 2.5rem;
+}
+.zu-font-size-max{
+    font-size: 3.85rem;
+}
+
+/* Layout */
+.zu-layout-row{
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1* var(--bs-gutter-y));
+    margin-right: calc(-.5* var(--bs-gutter-x));
+    margin-left: calc(-.5* var(--bs-gutter-x));
+}
+.zu-layout-row>*{
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x)* .5);
+    padding-left: calc(var(--bs-gutter-x)* .5);
+    margin-top: var(--bs-gutter-y);
+}
+.zu-layout-col{
+    flex: 1 0 0%;
+}
+.zu-layout-col-3{
+    flex: 0 0 auto;
+    width: 25%;
+}
+.zu-layout-col-6{
+    flex: 0 0 auto;
+    width: 50%;
+}
+.zu-layout-col-auto{
+    flex: 0 0 auto;
+    width: auto;
+}
+.zu-checkbox-col{
+    flex: 0 0 auto;
+    width: 16.66666%;
+}
+.zu-btn-col{
+    flex: 0 0 auto;
+    width: 36px;
+}
+.zu-btn-col .btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0!important;
+    border-radius: var(--zu-border-radius);
+    color: var(--zu-gray-600);
+    background-color: var(--zu-gray-200)!important;
+}
+.zu-btn-col .btn:hover{
+    color: var(--zu-gray-900);
+}
+/* Gap */
+.gx-1{
+    --bs-gutter-x: 0.25rem;
+}
+
+/* List */
+.zu-list{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.zu-list .zu-li-item{
+    border-bottom: 1px solid var(--zu-gray-100);
+    padding: 1.25rem .75rem;
+}
+.zu-list-zebra li:nth-child(even){
+    background-color: var(--zu-gray-wrap);
+}
+.zu-list-sm .zu-li-item{
+    padding: .5rem .75rem;
+}
+
+/* Border */
+.zu-border{
+    border: 1px solid var(--zu-gray-200);
+}
+.border-radius-sm{
+    border-radius: var(--zu-border-radius-sm)!important;
+}
+.border-radius-lg{
+    border-radius: var(--zu-border-radius-lg)!important;
+}
+.border-radius-xxl{
+    border-radius: var(--zu-border-radius-xxl)!important;
+}
+
+/* Margin */
+.zu-my-md{
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.zu-mt-sm{
+    margin-top: .75rem;
+}
+.zu-mt-md{
+    margin-top: 1.5rem;
+}
+.zu-mt-lg{
+    margin-top: 2.5rem;
+}
+.zu-mt-xl{
+    margin-top: 3.5rem;
+}
+.zu-mt-xxl{
+    margin-top: 4.5rem;
+}
+.zu-mb-none{
+    margin-bottom: 0!important;
+}
+.zu-mb-sm{
+    margin-bottom: .75rem;
+}
+.zu-mb-md{
+    margin-bottom: 1.5rem;
+}
+.zu-mb-lg{
+    margin-bottom: 2.5rem;
+}
+.zu-mb-xxl{
+    margin-bottom: 4.5rem;
+}
+.zu-mt-auto{
+    margin-top: auto;
+}
+.zu-ml-auto{
+    margin-left: auto;
+}
+
+/* Padding */
+/* x */
+.zu-px-xs{
+    padding-left: .375rem;
+    padding-right: .375rem;
+}
+.zu-px-sm{
+    padding-left: .75rem;
+    padding-right: .75rem;
+}
+.zu-px-md{
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+.zu-px-lg{
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+/* y */
+.zu-py-xs{
+    padding-top: .375rem;
+    padding-bottom: .375rem;
+}
+.zu-py-sm{
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+}
+.zu-py-md{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+.zu-py-lg{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* Cursor */
+.cursor-auto{
+    cursor: auto!important;
+}
+
+/* Step */
+.multi-steps > li.is-active:before, .multi-steps > li.is-active ~ li:before {
+    content: counter(stepNum);
+    font-family: inherit;
+    font-weight: 700;
+}
+.multi-steps > li.is-active:after, .multi-steps > li.is-active ~ li:after {
+    background-color: #ededed;
+}
+.multi-steps {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    font-weight: 700;
+}
+.multi-steps > li {
+    counter-increment: stepNum;
+    text-align: center;
+    display: table-cell;
+    position: relative;
+    z-index: 0;
+    color: tomato;
+}
+.multi-steps > li:before {
+    content: '\f00c';
+    content: '\2713;';
+    content: '\10003';
+    content: '\10004';
+    content: '\2713';
+    display: block;
+    margin: 0 auto 4px;
+    background-color: #fff;
+    width: 36px;
+    height: 36px;
+    line-height: 34px;
+    text-align: center;
+    font-weight: bold;
+    border-width: 2px;
+    border-style: solid;
+    border-color: tomato;
+    border-radius: 50%;
+}
+.multi-steps > li:after {
+    content: '';
+    height: 2px;
+    width: 100%;
+    background-color: tomato;
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    z-index: -1;
+}
+.multi-steps > li:last-child:after {
+    display: none;
+}
+.multi-steps > li.is-active:before {
+    background-color: #fff;
+    border-color: tomato;
+}
+.multi-steps > li.is-active ~ li {
+    color: var(--zu-gray-600);
+}
+.multi-steps > li.is-active ~ li:before {
+    background-color: #ededed;
+    border-color: #ededed;
+}
+
+/* Upload */
+.formFile {
+    width: auto;
+}
+.file-upload-wrapper {
+    border: 1px dashed var(--zu-gray-600);
+    border-radius: 0;
+    position: relative;
+    width: 100%;
+    height: 38px;
+}
+.file-upload-wrapper:after {
+    content: attr(data-text);
+    font-size: .875rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fff;
+    padding: 10px 15px;
+    display: block;
+    width: calc(100% - 40px);
+    pointer-events: none;
+    z-index: 20;
+    height: 36px;
+    line-height: 1.25;
+    color: #999;
+    border-radius: 5px 10px 10px 5px;
+    font-weight: 300;
+}
+.file-upload-wrapper:before {
+    /*content: 'Upload';*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: 0;*/
+    /*display: inline-block;*/
+    /*height: 56px;*/
+    /*background: #4daf7c;*/
+    /*color: #fff;*/
+    /*font-weight: 700;*/
+    /*z-index: 25;*/
+    /*font-size: 16px;*/
+    /*line-height: 60px;*/
+    /*padding: 0 15px;*/
+    /*text-transform: uppercase;*/
+    /*pointer-events: none;*/
+    /*border-radius: 0 5px 5px 0;*/
+}
+.file-upload-wrapper:hover:before {
+    /*background: #3d8c63;*/
+}
+.file-upload-wrapper .choose-file-button{
+    background-color: var(--zu-success);
+    border-radius: 0;
+    color: white;
+    padding: .5rem;
+    position: absolute;
+    top: .375rem;
+    right: .4rem;
+    z-index: 25;
+    line-height: 1;
+    font-size: .875rem;
+}
+.file-upload-wrapper input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    display: block;
+    cursor: pointer;
+    width: 100%;
+}
+.sprucecss {
+    align-items: flex-start;
+    background-color: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 0 0.5rem black;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    inset: auto auto 1rem 1rem;
+    line-height: 1.5;
+    max-width: 11rem;
+    padding: 1.5rem;
+    position: fixed;
+    text-decoration: none;
+}
+.sprucecss img {
+    height: 1.5rem;
+    width: auto;
+}
+
+/* 上传文件插件 覆盖插件默认样式 */
+.file-container input{
+    display: none!important;
+}
+.file-container .file-upload>div{
+    border-radius: var(--zu-border-radius-lg);
+    border: .15rem dashed var(--zu-gray-400);
+    background-color: var(--zu-gray-100);
+}
+.file-container .file-upload .material-icons-outlined{
+    font-size: 1.15rem;
+    font-style: normal;
+}
+.file-container .file-upload>div>p{
+    color: var(--zu-gray-600);
+}
+.file-container .file-upload>div>div, .file-container .file-upload>div>span{
+    display: none;
+}
+
+/* 上传图片插件 覆盖插件默认样式 image-uploader */
+.image-uploader{
+    border-radius: var(--zu-border-radius-lg);
+    border: .15rem dashed var(--zu-gray-400);
+    background-color: var(--zu-gray-100);
+}
+.image-uploader .uploaded .uploaded-image{
+    border-radius: var(--zu-border-radius-sm);
+    overflow: hidden;
+}
+.iui-cloud-upload:before{
+    content: '';
+    background-image: url("../img/pages/uploadimg.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: block;
+    width: 25px;
+    height: 25px;
+}
+
+/* Label */
+.zu-label-gray{
+    border-radius: var(--zu-border-radius-xxl);
+    background-color: var(--zu-gray-block);
+    color: var(--zu-dark);
+    display: flex;
+    align-items: center;
+    padding: .5rem .875rem;
+    line-height: 1.25;
+}
+
+/* Gap */
+.zu-gap-md{
+    gap: 1rem;
+}
+
+/* Flex */
+.zu-flex{
+    display: flex;
+}
+.zu-flex-wrap{
+    flex-wrap: wrap;
+}
+.zu-justify-content-end{
+    justify-content: end;
+}
+.zu-justify-content-center{
+    justify-content: center;
+}
+.zu-align-items-center{
+    align-items: center!important;
+}
+.zu-align-items-baseline{
+    align-items: baseline!important;
+}
+.zu-flex-none{
+    flex: none!important;
+}
+.zu-col{}
+.fixedFiveCol{
+    flex-wrap: wrap;
+    gap: initial!important;
+    margin: 0 -.5rem;
+}
+.fixedFiveCol .zu-form-item{
+    width: 20%;
+    flex: initial;
+    padding: .5rem;
+}
+
+/* Button */
+button{
+    cursor: pointer;
+}
+.zu-danger-btn{
+    border: 0;
+    border-radius: 0;
+    background-color: var(--zu-danger);
+    color: var(--zu-white);
+    padding: .65rem 1.75rem;
+    min-width: 10rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    transition: background-color 0.5s ease;
+}
+.zu-danger-btn:hover{
+    background-color: #ff4b28;
+}
+.zu-btn-outline-danger-md{
+    border: 1px solid var(--zu-danger);
+    border-radius: var(--zu-border-radius);
+    background-color: white;
+    color: var(--zu-danger);
+    padding: 1rem 1.25rem;
+    transition: background-color 0.5s ease;
+}
+.zu-btn-danger-md, .zu-btn-danger-sm{
+    border: 0;
+    border-radius: var(--zu-border-radius);
+    background-color: var(--zu-danger);
+    color: white;
+    padding: .5rem 1.25rem;
+    transition: background-color 0.5s ease;
+    font-size: 1rem;
+    font-weight: bold;
+}
+.user-layout-wrapper .user-main-content .zu-btn-danger-md, .zu-btn-danger-sm{
+    border-radius: 0!important;
+}
+.zu-btn-danger-md:focus, .zu-btn-danger-sm:focus{
+    color: white;
+}
+.zu-btn-danger-md:hover, .zu-btn-danger-sm:hover{
+    background-color: #ff4b28;
+}
+.zu-btn-danger-sm{
+    padding: .65rem 1rem;
+}
+.zu-btn-danger-sm:hover{
+    color: white;
+}
+.zu-btn-success-md{
+    border: 0;
+    border-radius: var(--zu-border-radius);
+    background-color: #2eca82;
+    color: white;
+    padding: 1rem 1.25rem;
+    transition: background-color 0.5s ease;
+}
+.zu-btn-success-md:hover{
+    background-color: #46db65;
+}
+.zu-copy-btn{
+    border: 1px solid var(--zu-gray-200);
+    background-color: var(--zu-gray-100);
+    border-radius: var(--zu-border-radius);
+    color: var(--zu-gray-700);
+    transition: background-color 0.5s ease;
+}
+.zu-copy-btn:hover{
+    background-color: var(--zu-gray-700);
+    border: 1px solid var(--zu-gray-700);
+    color: white;
+}
+.zu-outline-grey-btn{
+    border: 1px solid var(--zu-gray-300);
+    border-radius: var(--zu-border-radius-max);
+    color: var(--zu-gray-600);
+    padding: 1.25rem 1.75rem;
+    min-width: 10rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    transition: background-color 0.1s ease;
+}
+.zu-outline-grey-btn:hover{
+    border: 1px solid var(--zu-gray-600);
+    background-color: var(--zu-gray-600);
+    color: white;
+}
+/* 透明浮动按钮 */
+.transparentBtn{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+/* Modal */
+.zumodal{
+    padding: 0;
+}
+.zumodalBody{
+    min-height: 400px;
+    max-height: 600px;
+    overflow-y: auto;
+    margin: 15px 0 15px 30px;
+    padding: 0 30px 0 0;
+}
+.zumodalBody .dropdown-menu .inner{
+    max-height: 170px!important;
+}
+
+/* Loading */
+.ringLoader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #dfe4e8;
+    border-bottom-color: #FF3D00;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 9;
+    margin-top: -24px;
+    margin-left: -24px;
+}
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Bootstrap Select */
+.bootstrap-select{
+    width: 100%!important;
+}
+.bootstrap-select .btn-default{
+    border: var(--zu-border-line);
+    border-radius: 0;
+    background-color: white;
+    color: var(--zu-dark);
+    padding: .6rem .75rem;
+}
+.bootstrap-select .btn-default:hover{
+    background-color: var(--zu-gray-wrap);
+    color: var(--zu-dark);
+}
+.bootstrap-select .btn-default:focus, .bootstrap-select .btn-default:active{
+    border: var(--zu-border-line);
+    background-color: var(--zu-gray-block);
+    color: var(--zu-dark);
+    outline: 0!important;
+}
+.bootstrap-select.open>.dropdown-toggle.btn-default{
+    border: var(--zu-border-line);
+    border-radius: var(--zu-border-radius);
+    background-color: var(--zu-gray-block);
+    color: var(--zu-dark);
+    outline: 0!important;
+}
+.bootstrap-select .dropdown-menu{
+    border: var(--zu-border-line);
+    border-radius: 0!important;
+    color: var(--zu-dark);
+    padding: 0;
+}
+.bootstrap-select .dropdown-menu li a{
+    color: var(--zu-dark);
+    padding: .875rem 1.25rem;
+    font-size: 1rem;
+}
+.bootstrap-select .dropdown-menu>.active>a, .bootstrap-select .dropdown-menu>.active>a:hover, .bootstrap-select .dropdown-menu li a:hover{
+    background-color: var(--zu-gray-block);
+    color: var(--zu-dark);
+    outline: 0!important;
+}
+.bootstrap-select .dropdown-toggle .filter-option-inner-inner{
+    font-size: 1rem;
+}
+.bs-actionsbox, .bs-donebutton, .bs-searchbox{
+    padding: 1.25rem;
+}
+.bs-searchbox .form-control{
+    border: var(--zu-border-line);
+    border-radius: var(--zu-border-radius);
+    padding: .65rem;
+}
+.bootstrap-select .dropdown-menu.inner{
+    min-width: 100%!important;
+}
+
+/* 模拟Select */
+.selectDropdown {
+    display: flex;
+    position: relative;
+}
+.selectDropdown .selectDropBtn{
+    border: var(--zu-border-line);
+    border-radius: 0;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: .585rem .875rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    cursor: pointer;
+}
+.selectDropdown .selectDropBtn:hover{
+    background-color: #f7f8f9;
+}
+.selectDropdown .selectDropBtn .arrow{
+    margin-left: auto;
+    display: inline-block;
+    min-width: 13px;
+    max-width: 13px;
+    min-height: 10px;
+    max-height: 10px;
+    position: relative;
+    vertical-align: middle;
+    margin-top: 2px;
+}
+.selectDropdown .selectDropBtn .arrow::before, .selectDropdown .selectDropBtn .arrow::after{
+    content: "";
+    position: absolute;
+    width: 8px;
+    top: 3px;
+    border-bottom: 2px solid;
+    left: 0;
+    transform: rotate(45deg);
+    transition: transform .15s ease-in-out;
+}
+.selectDropdown .selectDropBtn .arrow::before{
+    left: auto;
+    right: 0;
+    transform: rotate(-45deg);
+}
+.selectDropdown .selectDropBtn .arrow.chevronUp::before{
+    transform: rotate(45deg);
+}
+.selectDropdown .selectDropBtn .arrow.chevronUp::after{
+    transform: rotate(-45deg);
+}
+.selectDropdown .dropdown-content {
+    border: var(--zu-border-line);
+    border-radius: 0;
+    background-color: var(--zu-white);
+    box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+    position: absolute;
+    top: 100%;
+    transform: translateY(.45rem);
+    right: 0;
+    z-index: 9;
+    width: 100%;
+    min-height: 1rem;
+    overflow: hidden;
+}
+.selectDropdown .dropdown-content button {
+    margin: 0;
+    padding: .875rem 1.5rem;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid #f9f9f9;
+    width: 100%;
+    text-align: left;
+}
+.selectDropdown .dropdown-content button.active{
+    background-color: #e5ebee;
+}
+.selectDropdown .dropdown-content button:last-child{
+    border-bottom: 0;
+}
+.selectDropdown .dropdown-content button:hover{
+    background-color: #f6f8f9;
+}
+.selectDropdown .dropdown-content .multipleChoice{
+    padding: .75rem 0;
+    flex-wrap: wrap;
+    max-height: 460px;
+    overflow-y: auto;
+}
+.selectDropdown .dropdown-content .multipleChoice .checkbox-wrapper-1{
+    width: 50%;
+    padding: .5rem 1.25rem;
+}
+.selectDropdown .dropdown-content .filter-checkbox-form{
+    padding: 1.25rem 1.25rem .5rem 1.25rem;
+}
+.selectDropdown .dropdown-content .filter-checkbox-form .zu-form-control{
+    padding: .75rem;
+}
+/* Checkbox 一行一列 */
+.selectDropdown .checkboxOneRowCol .multipleChoice .checkbox-wrapper-1{
+    width: 100%!important;
+}
+
+/* 单选 */
+.zu-radio{
+    border: var(--zu-border-line);
+    border-radius: 0;
+    background-color: var(--zu-white);
+    padding: .6rem 1.75rem;
+    font-weight: normal;
+    font-family: Roboto;
+    min-width: 7rem;
+    position: relative;
+}
+.zu-radio .icon-box{
+    background-color: orangered;
+    border-radius: .15rem;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    color: white;
+    display: none;
+    position: absolute;
+    padding: .15rem .375rem;
+    top: 1px;
+    right: 1px;
+    z-index: 1;
+    /*font-size: .75rem;*/
+    width: 18px;
+    height: 18px;
+    justify-content: center;
+    align-items: center;
+}
+.zu-radio:hover{
+    border: 1px solid var(--zu-dark);
+    background-color: var(--zu-gray-wrap);
+}
+.zu-radio:focus{
+    border: 1px solid var(--zu-dark);
+    background-color: var(--zu-gray-block);
+}
+.zu-radio.active{
+    border: 1px solid orangered!important;
+    outline: 1px solid orangered!important;
+    background-color: #fffaf6;
+    color: orangered;
+}
+.zu-radio.active .icon-box{
+    display: flex;
+}
+
+/* 多选 Checkbox */
+.checkbox-wrapper-1 *,
+.checkbox-wrapper-1 ::after,
+.checkbox-wrapper-1 ::before {
+    box-sizing: border-box;
+}
+.checkbox-wrapper-1 [type=checkbox].substituted {
+    margin: 0;
+    width: 0;
+    height: 0;
+    display: inline;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.checkbox-wrapper-1 [type=checkbox].substituted + label:before {
+    content: "";
+    display: inline-block;
+    vertical-align: top;
+    height: 1.15em;
+    width: 1.15em;
+    margin-right: 0.6em;
+    color: rgba(0, 0, 0, 0.275);
+    border: solid 0.06em;
+    box-shadow: 0 0 0.04em, 0 0.06em 0.16em -0.03em inset, 0 0 0 0.07em transparent inset;
+    border-radius: 0.2em;
+    background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xml:space="preserve" fill="white" viewBox="0 0 9 9"><rect x="0" y="4.3" transform="matrix(-0.707 -0.7072 0.7072 -0.707 0.5891 10.4702)" width="4.3" height="1.6" /><rect x="2.2" y="2.9" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 12.1877 2.9833)" width="6.1" height="1.7" /></svg>') no-repeat center, white;
+    background-size: 0;
+    will-change: color, border, background, background-size, box-shadow;
+    transform: translate3d(0, 0, 0);
+    transition: color 0.1s, border 0.1s, background 0.15s, box-shadow 0.1s;
+}
+.checkbox-wrapper-1 [type=checkbox].substituted:enabled:active + label:before,
+.checkbox-wrapper-1 [type=checkbox].substituted:enabled + label:active:before {
+    box-shadow: 0 0 0.04em, 0 0.06em 0.16em -0.03em transparent inset, 0 0 0 0.07em rgba(0, 0, 0, 0.1) inset;
+    background-color: #f0f0f0;
+}
+.checkbox-wrapper-1 [type=checkbox].substituted:checked + label:before {
+    background-color: orangered;
+    background-size: 0.75em;
+    color: rgba(0, 0, 0, 0.075);
+}
+.checkbox-wrapper-1 [type=checkbox].substituted:checked:enabled:active + label:before,
+.checkbox-wrapper-1 [type=checkbox].substituted:checked:enabled + label:active:before {
+    background-color: orangered;
+    color: rgba(0, 0, 0, 0.275);
+}
+.checkbox-wrapper-1 [type=checkbox].substituted:focus + label:before {
+    box-shadow: 0 0 0.04em, 0 0.06em 0.16em -0.03em transparent inset, 0 0 0 0.07em rgba(0, 0, 0, 0.1) inset, 0 0 0 3.3px rgba(249, 69, 8, 0.55), 0 0 0 5px rgba(249, 69, 8, 0.3);
+}
+.checkbox-wrapper-1 [type=checkbox].substituted:focus:active + label:before,
+.checkbox-wrapper-1 [type=checkbox].substituted:focus + label:active:before {
+    box-shadow: 0 0 0.04em, 0 0.06em 0.16em -0.03em transparent inset, 0 0 0 0.07em rgba(0, 0, 0, 0.1) inset, 0 0 0 3.3px rgba(249, 69, 8, 0.55), 0 0 0 5px rgba(249, 69, 8, 0.3);
+}
+.checkbox-wrapper-1 [type=checkbox].substituted:disabled + label:before {
+    opacity: 0.5;
+}
+
+.checkbox-wrapper-1 [type=checkbox].substituted.dark + label:before {
+    color: rgba(255, 255, 255, 0.275);
+    background-color: #222;
+    background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xml:space="preserve" fill="rgba(34, 34, 34, 0.999)" viewBox="0 0 9 9"><rect x="0" y="4.3" transform="matrix(-0.707 -0.7072 0.7072 -0.707 0.5891 10.4702)" width="4.3" height="1.6" /><rect x="2.2" y="2.9" transform="matrix(-0.7071 0.7071 -0.7071 -0.7071 12.1877 2.9833)" width="6.1" height="1.7" /></svg>');
+}
+.checkbox-wrapper-1 [type=checkbox].substituted.dark:enabled:active + label:before,
+.checkbox-wrapper-1 [type=checkbox].substituted.dark:enabled + label:active:before {
+    background-color: #444;
+    box-shadow: 0 0 0.04em, 0 0.06em 0.16em -0.03em transparent inset, 0 0 0 0.07em rgba(255, 255, 255, 0.1) inset;
+}
+.checkbox-wrapper-1 [type=checkbox].substituted.dark:checked + label:before {
+    background-color: #a97035;
+    color: rgba(255, 255, 255, 0.075);
+}
+.checkbox-wrapper-1 [type=checkbox].substituted.dark:checked:enabled:active + label:before,
+.checkbox-wrapper-1 [type=checkbox].substituted.dark:checked:enabled + label:active:before {
+    background-color: #c68035;
+    color: rgba(0, 0, 0, 0.275);
+}
+.checkbox-wrapper-1 [type=checkbox].substituted + label {
+    -webkit-user-select: none;
+    user-select: none;
+    line-height: 1.25;
+    font-weight: normal;
+    font-family: Roboto;
+}
+
+/* 自定义单选 */
+.zu-custom-radio {
+    color: var(--zu-gray-800);
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 2rem;
+    cursor: pointer;
+    /*font-size: 1rem;*/
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-weight: normal;
+}
+/* Hide the browser's default radio button */
+.zu-custom-radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+/* Create a custom radio button */
+.zu-checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1.375rem;
+    height: 1.375rem;
+    background-color: #fff;
+    border-radius: 99rem;
+    border: 2px solid #ccc;
+}
+/* On mouse-over, add a grey background color */
+.zu-custom-radio:hover input ~ .zu-checkmark {
+    background-color: #ccc;
+}
+/* When the radio button is checked, add a blue background */
+.zu-custom-radio input:checked ~ .zu-checkmark {
+    /*background-color: var(--zu-danger);*/
+    background-color: white;
+    border: 2px solid var(--zu-danger);
+}
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.zu-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+/* Show the indicator (dot/circle) when checked */
+.zu-custom-radio input:checked ~ .zu-checkmark:after {
+    display: block;
+}
+/* Style the indicator (dot/circle) */
+.zu-custom-radio .zu-checkmark:after {
+    top: .25rem;
+    left: .235rem;
+    width: .6rem;
+    height: .6rem;
+    border-radius: 99rem;
+    /*background: white;*/
+    background-color: var(--zu-danger);
+}
+
+/* 普通下拉 */
+.defaultDropdown{
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+.defaultDropdown .dropdownButton{
+    border: 0;
+    border-radius: .15rem;
+    background-color: var(--zu-gray-block);
+    padding: .6rem 1rem;
+}
+.defaultDropdown .dropdownButton:hover{
+    background-color: var(--zu-gray-block-hover);
+}
+.defaultDropdown .dropdownPanel{
+    border: var(--zu-border-line);
+    border-radius: var(--zu-border-radius);
+    background-color: var(--zu-white);
+    box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+    position: absolute;
+    top: 100%;
+    transform: translateY(.45rem);
+    right: 0;
+    z-index: 2;
+    min-width: 200px;
+    min-height: 1rem;
+    padding: 1.25rem;
+}
+.defaultDropdown .dropdownPanel .zu-form-item{
+    margin-bottom: 1.25rem;
+}
+.defaultDropdown .dropdownPanel .zu-form-item:last-child{
+    margin-bottom: 0;
+}
+
+/* Alerts */
+.zu-alert{
+    border-radius: var(--zu-border-radius-lg);
+    color: var(--zu-white);
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.25rem;
+}
+.zu-alert .iconBox{
+    width: 25px;
+    height: 25px;
+}
+.zu-alert .iconBox>svg{
+    width: 100%;
+    height: 100%;
+}
+.zu-alert .textBox{
+    flex: 1;
+    line-height: 1;
+    padding-left: 1rem;
+}
+/* Alert */
+.zu-alert-wrap{
+    box-shadow: none;
+    border: 1px solid #e0e0e0;
+    border-radius: 0;
+    background-color: white;
+    padding: 1.5rem;
+    font-size: .875rem!important;
+
+    /* 确保文本自动换行 */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+
+    /* 控制空白处理 */
+    white-space: pre-wrap;
+}
+.zu-alert-wrap .iconBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 4rem;
+    height: 4rem;
+}
+.zu-alert-wrap .bTitle{
+    font-size: .9375rem;
+    line-height: 1.75;
+}
+.zu-alert-wrap ol li{
+    padding: .375rem 0;
+}
+/* Alert Color */
+.zu-alert-danger{
+    border-top: 2px solid red;
+}
+.zu-alert-danger .iconBox{
+    background-color: var(--zu-danger);
+    border-radius: var(--zu-border-radius-max);
+    color: white;
+}
+/* Ban */
+.account-ban{
+    background-color: #fdeeef!important;
+}
+.account-ban .iconBox{
+    /*width: 6rem;*/
+    /*height: 6rem;*/
+}
+.account-ban .zu-font-size-xxl{
+    /*font-size: 3.5rem;*/
+}
+.account-ban .bTitle{
+    color: var(--zu-danger);
+    font-weight: 700;
+}
+.account-ban .alert-foot{
+    border-top: 1px solid #d2d2d2;
+    width: 100%;
+    text-align: center;
+    padding-top: 1.5rem;
+    font-size: 1.15rem;
+}
+/* Small Alert */
+.zu-small-alert{
+    border-radius: .375rem .75rem .75rem .375rem;
+    border: var(--zu-border-line);
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+    color: var(--zu-gray-800);
+    display: flex;
+    /*flex-wrap: wrap;*/
+    align-items: center;
+    padding: 1rem;
+    position: relative;
+    font-weight: normal;
+    font-family: Roboto;
+}
+.zu-small-alert::before{
+    border-radius: .15rem;
+    content: '';
+    display: flex;
+    width: .25rem;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+/* Small Alert Color */
+.zu-small-alert-warning{
+    background-color: #fef8e8;
+}
+.zu-small-alert-warning .zu-text-warning{
+    color: #fdad28;
+    font-size: 1.25rem;
+    margin-right: .5rem;
+}
+.zu-small-alert-warning::before{
+    background-color: #fdad28;
+}
+.zu-small-alert-danger{
+    background-color: white;
+}
+.zu-small-alert-danger .zu-text-danger{
+    color: var(--zu-danger);
+    font-size: 1.25rem;
+    margin-right: .5rem;
+}
+.zu-small-alert-danger::before{
+    background-color: var(--zu-danger);
+}
+.zu-small-alert-danger a{
+    color: var(--zu-danger);
+}
+.zu-small-alert-primary{
+    background-color: white;
+}
+.zu-small-alert-primary .zu-text-primary{
+    color: var(--zu-primary);
+    font-size: 1.25rem;
+    margin-right: .5rem;
+}
+.zu-small-alert-primary::before{
+    background-color: var(--zu-primary);
+}
+
+/* Gradient BG Color */
+.gradient-danger{
+    background: #8A2387;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #F27121, #E94057, #8A2387);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #F27121, #E94057, #8A2387); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.gradient-danger a{
+    color: var(--zu-light-yellow);
+    font-weight: 700;
+    position: relative;
+}
+.gradient-danger a::after{
+    content: "";
+    position: absolute;
+    bottom: -.25rem;
+    left: 50%;
+    display: block;
+    background: none repeat scroll 0 0 transparent;
+    height: 2px;
+    width: 0;
+    background: var(--zu-light-yellow);
+    transition: width 0.3s ease 0s, left 0.3s ease 0s;
+}
+.gradient-danger a:hover::after{
+    width: 100%;
+    left: 0;
+}
+.gradient-primary{
+    background-color: #0093E9;
+    background-image: linear-gradient(90deg, #0093E9 0%, #80bdd0 100%);
+}
+
+/* Layout */
+/* 一行两列 */
+.zu-row{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -1rem;
+}
+.zu-row .zu-col-box{
+    width: 50%;
+    padding: 0 1rem;
+}
+
+.mainBg{
+    background-color: #f4f4f7;
+    color: #131313;
+    width: 100%;
+    min-height: 720px;
+}
+/* 如果后面全部改版,改成最新框架自带布局 */
+.userCenterContainer{
+    max-width: 1332px; /* 保持老版网站固定宽 */
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    width: 100%;
+    padding-right: calc(var(--bs-gutter-x)* .5);
+    padding-left: calc(var(--bs-gutter-x)* .5);
+    /*margin-right: auto;*/
+    /*margin-left: auto;*/
+}
+.userCenterWrapper{
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1* var(--bs-gutter-y));
+    margin-right: calc(-.5* var(--bs-gutter-x));
+    margin-left: calc(-.5* var(--bs-gutter-x));
+}
+.userCenterWrapper>* {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x)* .5);
+    padding-left: calc(var(--bs-gutter-x)* .5);
+    margin-top: var(--bs-gutter-y);
+}
+.userCenterPageMain{
+    flex: 0 0 auto;
+    width: 72%;
+    position: relative;
+}
+.userCenterSidebar{
+    flex: 0 0 auto;
+    width: 28%;
+}
+/* Small Container */
+.zu-small-container{
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+/* Title Bar */
+.pageTitleBar{
+    display: flex;
+    align-items: center;
+}
+.pageTitleBar .bigTitle{
+    font-family: Roboto;
+    font-size: 1.375rem;
+    font-weight: bold;
+}
+.pageTitleBar .btnWrap{
+    display: flex;
+    margin-left: auto;
+}
+.pageTitleBar .btnWrap .iconBtn{
+    background: none;
+    border: 0;
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+}
+.pageTitleBar .btnWrap .iconBtn .iconBox{
+    background-color: var(--zu-white);
+    border-radius: var(--zu-border-radius-max);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    /*color: var(--zu-secondary);*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .65rem;
+    font-size: 1.35rem;
+    transition: background-color 0.5s ease;
+}
+.pageTitleBar .btnWrap .iconBtn .textBox{
+    flex: 1;
+    padding-left: .5rem;
+    font-weight: normal;
+}
+.pageTitleBar .btnWrap .iconBtn:hover .iconBox{
+    background-color: var(--zu-secondary);
+    color: var(--zu-white);
+}
+
+/* 步骤 */
+.lightBgBox{
+    border-radius: 0;
+    background-color: var(--zu-white);
+    border: 0;
+    /*box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;*/
+    padding: 1.875rem;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 0px 5px 0px, rgba(0, 0, 0, 0.06) 0px 0px 1px 0px;
+}
+.lightBgBox .bigTitle{
+    font-size: 1.375rem;
+    font-weight: normal;
+    font-family: Roboto;
+    font-weight: bold;
+}
+.lightBgBox .subTitle{
+    color: var(--zu-gray-800);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+.lightBgBox .rowFormBox{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.lightBgBox .rowFormBox .textLabel{
+    width: 30%;
+}
+.lightBgBox .rowFormBox .formBox{
+    flex: 1;
+}
+.lightBgBox .rowFormBox .formBox .form-group-wrap{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+}
+.lightBgBox .rowFormBox .formBox .form-group-wrap .f-g-item{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+.lightBgBox .rowFormBox .formBox .form-group-wrap .f-g-item .zu-btn{
+    margin-left: 5px;
+    padding: 4px 8px!important;
+    font-size: 1rem!important;
+}
+.lightBgBox.zu-error{
+    /*outline: 3px solid rgba(255, 30, 0, 0.5);*/
+}
+.lightGrayBox{
+    background-color: var(--zu-gray-block);
+    border-radius: var(--zu-border-radius-lg);
+    padding: 1.25rem;
+}
+.lightBgBox .fullWidthFormBox{
+    display: flex;
+    flex-wrap: wrap;
+}
+.lightBgBox .fullWidthFormBox .textLabel{
+    color: var(--zu-gray-600);
+    font-weight: 700;
+    width: 100%;
+}
+.lightBgBox .fullWidthFormBox .formBox{
+    width: 100%;
+}
+
+.item_attr_show_text{
+    display: flex;
+    flex-wrap: wrap;
+}
+.item_attr_show_text .bigTitle{
+    width: 100%;
+}
+.item_attr_show_text .attrList, .item_attr_show_text .platformList, .item_attr_show_text .deviceList, .item_attr_show_text .areaList, .item_attr_show_text .countryList{
+    width: 50%!important;
+    padding: 1rem 0!important;
+    border: 0;
+}
+
+    /* Tips */
+.tipInfoPanel{
+    border-radius: 0;
+    border: var(--zu-border-line);
+    padding: 1.75rem;
+    position: relative;
+    transition: all 0.5s ease;
+}
+.tipInfoPanel > ul{
+    color: var(--zu-secondary);
+    padding: 0 0 0 .75rem;
+}
+.tipInfoPanel > ul li{
+    padding: .5rem 0 .5rem 0;
+    list-style-type: disc;
+}
+.tipInfoPanel .iconBox{
+    background-color: var(--zu-gray-400);
+    color: var(--zu-white);
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    z-index: 2;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    border-radius: 0;
+}
+.highlight{
+    border: 1px solid var(--zu-yellow);
+    background-color: #fffbf8;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+}
+.highlight .iconBox{
+    background-color: var(--zu-yellow);
+}
+.highlight ul li{
+    color: var(--zu-dark);
+}
+
+/* 已选商品 */
+.selectedProductBox{
+    border: 2px dashed #e5ebee;
+    background-color: #f6f8f9;
+    border-radius: var(--zu-border-radius-lg);
+    padding: 1.25rem;
+}
+.selectedProductBox .productCard{
+    /*background-color: white;*/
+    border-radius: var(--zu-border-radius);
+    /*box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;*/
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 1.25rem;
+    position: relative;
+}
+.selectedProductBox .productCard .productImg{
+    border: var(--zu-border-line);
+    border-radius: var(--zu-border-radius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+}
+.selectedProductBox .productCard .productImg > img{
+    max-width: 100%;
+    max-height: 100%;
+}
+.selectedProductBox .productCard .productInfo{
+    flex: 1;
+    padding-left: 1.5rem;
+}
+.selectedProductBox .productCard .productInfo .productTitle{
+    font-weight: 700;
+    font-size: 1.15rem;
+}
+.selectedProductBox .productCard .productInfo .productDescription{
+    color: var(--zu-secondary);
+    font-size: 1rem;
+}
+.selectedProductBox .productCard .productInfo .productAttribute{
+    border: 1px solid orangered;
+    border-radius: var(--zu-border-radius);
+    color: orangered;
+    padding: .35rem .75rem;
+    font-size: .875rem;
+}
+.selectedProductBox .productCard .delThisProduct{
+    border: 0;
+    background-color: white;
+    border-radius: 99rem;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    margin-left: auto;
+    line-height: 1;
+}
+
+/* 设置价格 */
+.setPriceForm{
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+}
+.setPriceForm .defaultDropdown{
+    margin-top: 1.75rem;
+}
+.zu-form-item{
+    flex: 1;
+}
+.zu-form-item .formLabel{
+    margin-bottom: .5rem;
+    font-size: var(--zu-font-size-sm);
+}
+.zu-form-item .formControl{
+    border: var(--zu-border-line);
+    border-radius: 0;
+    display: block;
+    width: 100%;
+    padding: .6rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+}
+.zu-form-item .formControl:focus{
+    border: 1px solid var(--zu-gray-400);
+    outline: 3px solid rgba(255, 210, 0, 0.5);
+}
+.formDangerTextBox{
+    min-height: .875rem;
+}
+
+/* 已选择标签 */
+.supportInfoLine{
+    border-bottom: 1px solid #00000020;
+    padding-bottom: .75rem;
+    margin-top: -.5rem;
+    margin-bottom: .5rem;
+}
+.multipleChoiceLabel{
+    margin: 0 -.25rem;
+}
+.multipleChoiceLabel .selectedQuantity{
+    padding: .875rem .25rem;
+}
+.multipleChoiceLabel .labelItem{
+    padding: .25rem;
+    font-size: var(--zu-font-size-sm);
+}
+.multipleChoiceLabel .labelItem .del-this-label-btn{
+    cursor: pointer;
+    margin-left: .5rem;
+}
+.multipleChoiceLabel .labelItem .del-this-label-btn:hover{
+    color: var(--zu-danger);
+}
+.multipleRadioBox{
+    padding: .75rem 1.25rem;
+}
+.lightGrayBox .radio-bar{
+    flex-wrap: wrap;
+    margin: 0 -.5rem;
+}
+.lightGrayBox .radio-bar .zu-col{
+    padding: .5rem;
+    width: 33.33333333%;
+}
+.lightGrayBox .radio-bar .zu-col .zu-radio{
+    display: flex;
+    align-items: center;
+    min-width: 100%;
+    text-align: left;
+}
+.lightGrayBox .radio-bar .zu-col .zu-radio .number{
+    color: var(--zu-secondary);
+    font-weight: normal;
+    margin-left: auto;
+}
+
+/* 创建自定义产品 */
+.createCustomProducts{
+    border-radius: var(--zu-border-radius-lg);
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+.createCustomProducts .cHerder{
+    background-color: #34363b;
+    border-radius: 0;
+    color: var(--zu-white);
+    display: flex;
+    align-items: center;
+    padding: .5rem 1.25rem;
+    font-weight: 700;
+}
+.createCustomProducts .cHerder .btnBox{
+    margin-left: auto;
+}
+.createCustomProducts .cHerder .btnBox button{
+    background-color: #34363b;
+    border: 0;
+    color: var(--zu-white);
+    font-size: 1.15rem;
+}
+.createCustomProducts .cHerder .btnBox .foldButton svg{
+    transform: scaleY(1);
+}
+.createCustomProducts .cHerder .btnBox .foldButton.active svg{
+    transform: scaleY(-1);
+}
+.createCustomProducts .cHerder.active{
+    border-radius: var(--zu-border-radius-lg);
+}
+.createCustomProducts .cMainBody{
+    border: var(--zu-border-line);
+    border-radius: 0;
+    padding: 1.25rem;
+    position: relative;
+}
+.createCustomProducts .cMainBody .titleBar{
+    font-weight: 700;
+    border-top: 1px solid var(--zu-gray-200);
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+    margin-top: 2rem;
+}
+.createCustomProducts .cMainBody .tipInfoPanel{
+    position: absolute;
+    bottom: 0;
+    left: 100%;
+    transform: translateX(3.5rem);
+    width: 355px;
+}
+.createCustomProducts .cMainBody .zu-form-item .formLabel{
+    font-weight: normal;
+}
+.createCustomProducts .cMainBody .productInfoForm{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -1rem;
+}
+.createCustomProducts .cMainBody .productInfoForm .rowFormBox{
+    width: 50%;
+    padding: .5rem 1rem;
+}
+.createCustomProducts .pictureUploaded .zu-li-item{
+    border-bottom: 1px solid var(--zu-gray-200);
+    color: var(--zu-gray-700);
+    position: relative;
+    padding-left: 2.15rem;
+}
+.createCustomProducts .pictureUploaded .zu-li-item::before{
+    content: '';
+    width: 12px;
+    height: 12px;
+    background-image: url("../img/pages/photo-icon.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position:  center;
+    position: absolute;
+    top: .65rem;
+    left: .65rem;
+    opacity: .75;
+}
+.createCustomProducts .pictureUploaded .zu-li-item a{
+    color: var(--zu-gray-700);
+    text-decoration: none;
+}
+.createCustomProducts .pictureUploaded .zu-li-item a:hover{
+    text-decoration: underline;
+}
+.parentProductAttributeChooseWrapper{
+    flex-wrap: wrap;
+}
+
+/* 产品详情 */
+.productDetailsInfoBox{}
+.productDetailsInfoBox .rowFormBox .textLabel, .productDetailsInfoBox .rowFormBox .formBox{
+    width: 100%;
+}
+
+/* 产品属性 */
+.subProductAttributeChooseWrapper{
+    border: 1px solid #ffecdf;
+    background-color: #fffaf6;
+    border-radius: var(--zu-border-radius);
+    padding: 1rem;
+}
+.productAttributeChoose{
+    margin: 0 -.5rem;
+}
+.productAttributeChoose .type_name{
+    color: orangered;
+}
+.productAttributeChoose .zu-form-item{
+    width: 20%;
+    flex: initial;
+    padding: .5rem;
+}
+.productAttributeChoose .zu-form-item .checkbox-wrapper-1{
+    position: relative;
+}
+.productAttributeChoose .zu-form-item .checkbox-wrapper-1 input{
+    position: absolute;
+    z-index: -1;
+}
+.productAttributeChoose .zu-form-item .checkbox-wrapper-1 .zu-mb-none{
+    border: 1px solid var(--zu-gray-300);
+    background-color: white;
+    border-radius: var(--zu-border-radius);
+    cursor: pointer;
+    padding: .5rem;
+    width: 100%;
+    font-weight: normal;
+}
+
+/* 价格设定2 */
+.setMultipleProduct .setBar{
+    background-color: var(--zu-gray-block);
+    border-radius: 0;
+    padding: .375rem 2rem;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}
+.setMultipleProduct .setBar .bootstrap-select .btn-default:focus, .setMultipleProduct .setBar .bootstrap-select .btn-default:active{
+    background-color: white;
+}
+.setMultipleProduct .setBar .bootstrap-select.open>.dropdown-toggle.btn-default{
+    background-color: white;
+}
+.setMultipleProduct .setBar .setPriceForm .zu-form-item.disable{
+    position: relative;
+    opacity: .5;
+}
+.setMultipleProduct .setBar .setPriceForm .zu-form-item.disable::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+}
+.setMultipleProduct .zu-list{
+    border-top: 1px solid var(--zu-gray-300);
+    border-left: 1px solid var(--zu-gray-300);
+    border-right: 1px solid var(--zu-gray-300);
+    border-bottom: 1px solid var(--zu-gray-300);
+    border-radius: 0;
+    overflow: hidden;
+}
+.setMultipleProduct .zu-list .zu-li-item{
+    border-bottom: 1px solid var(--zu-gray-300);
+    padding: 0 1rem;
+    width: 100%;
+}
+.setMultipleProduct .zu-list .zu-li-item.hvr-sweep-to-right:before{
+    background: var(--zu-gray-block);
+}
+.setMultipleProduct .zu-list .zu-li-item.hvr-sweep-to-right:hover, .setMultipleProduct .zu-list .zu-li-item.hvr-sweep-to-right:focus, .setMultipleProduct .zu-list .zu-li-item.hvr-sweep-to-right:active {
+    color: var(--zu-dark);
+}
+.setMultipleProduct .zu-list .zu-li-item.hvr-sweep-to-right:hover .setRow .zu-form-item{
+    border-right: 1px solid var(--zu-gray-400);
+}
+.setMultipleProduct .zu-list .zu-li-item.hvr-sweep-to-right:hover .setRow .zu-form-item:last-child{
+    border-right: 0;
+}
+.setMultipleProduct .setRow{
+    margin: 0 -1rem;
+}
+.setMultipleProduct .setRow .zu-form-item{
+    display: flex;
+    align-items: center;
+    /*color: var(--zu-gray-700);*/
+    padding: 1rem;
+    border-right: 1px solid var(--zu-gray-300);
+}
+.setMultipleProduct .setRow .zu-form-item.unit-price-item{
+    min-width: 25rem;
+    width: 100%;
+}
+.setMultipleProduct .setRow .zu-form-item:last-child{
+    min-width: 50px;
+    flex: initial;
+    border-right: 0;
+}
+.setMultipleProduct .setRow .zu-form-item .formLabel{
+    white-space: nowrap;
+    padding-right: .5rem;
+    margin-bottom: 0;
+    font-weight: normal;
+}
+.setMultipleProduct .setRow .zu-form-item .formControl{
+    text-align: center;
+    min-width: 8rem;
+    width: 100%;
+    color: var(--zu-dark);
+    font-weight: 700;
+}
+.setMultipleProduct .setRow .zu-form-item .this-row-li-unit{
+    padding-left: .5rem;
+    white-space: nowrap;
+}
+.setMultipleProduct .setRow .zu-form-item .this-row-li-conversion{
+    margin-top: .25rem;
+}
+.setMultipleProduct .setRow .zu-form-item .this-row-li-conversion > svg{
+    margin-right: .375rem;
+}
+.setMultipleProduct .setRow .zu-form-item .this-row-li-total, .setMultipleProduct .setRow .zu-form-item .this-row-li-amount{
+    color: var(--zu-dark);
+    font-weight: 700;
+}
+.setMultipleProduct .setRow .zu-form-item .this-row-li-del-btn{
+    border: 0;
+    border-radius: var(--zu-border-radius-xxl);
+    background-color: var(--zu-gray-block);
+    color: var(--zu-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    width: 22px;
+    height: 22px;
+    font-size: .875rem;
+}
+
+/* Guide */
+.guideListWrap{
+    border-top: 1px solid var(--zu-gray-200);
+}
+.guideListWrap .zu-form-item{
+    /*background-color: var(--zu-gray-100);*/
+    border-left: 1px solid var(--zu-gray-200);
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    align-items: stretch;
+}
+.guideListWrap .zu-form-item:nth-child(even){
+    /*background-color: var(--zu-gray-200);*/
+}
+.guideListWrap .zu-form-item:first-child{
+    border-left: 0;
+}
+.guideListWrap .zu-form-item:first-child{
+    padding: 1rem 1rem 1rem 0;
+}
+.guideListWrap .zu-form-item .showGuideInfo{
+    padding-left: 2rem;
+}
+.guideListWrap .zu-form-item .itemTitle{
+    font-weight: normal;
+}
+.guideListWrap .zu-form-item .checkbox-wrapper-1{
+    width: 100%;
+}
+.guideListWrap .zu-form-item .btn{
+    height: initial!important;
+}
+
+/* 成为卖家 */
+.termsTextWrapper{
+    /*padding: 1.25rem 2.5rem;*/
+}
+.termsTextWrapper .bigTitle{
+    color: var(--zu-gray-800);
+    font-size: 2rem;
+}
+.termsTextWrapper .zu-radio{
+    font-size: 1.25rem;
+    font-weight: normal;
+    min-width: 15rem;
+}
+.termsTextWrapper .termsBox{
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border-radius: var(--zu-border-radius-lg);
+    padding: 1.5rem;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+.termsTextWrapper .footBtnBox{
+    gap: 2rem;
+}
+.termsTextWrapper .footBtnBox button{
+    min-width: 16rem;
+}
+.termsTextWrapper .editableProductName{
+    background-color: white;
+    border-radius: var(--zu-border-radius);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+    padding: 1.5rem .75rem;
+    font-weight: 700;
+    font-size: 1.15rem;
+    position: relative;
+}
+.termsTextWrapper .editableProductName input{
+    border: 0;
+    background: none;
+    box-shadow: none;
+    outline: 0;
+    width: 100%;
+}
+.termsTextWrapper .editableProductName .editBtnBox{
+    position: absolute;
+    z-index: 2;
+    top: 1.25rem;
+    right: .5rem;
+}
+.termsTextWrapper .editableProductName .editBtnBox button{
+    border: 0;
+    background: none;
+    font-size: 1.5rem;
+    margin-right: .5rem;
+}
+.termsTextWrapper .editableProductName.notEditable::before{
+    content: '';
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.blockBtnWrap{
+    border-bottom: 1px solid var(--zu-gray-200);
+}
+.blockBtnWrap button{
+    border: 0;
+    background: none;
+    box-shadow: none;
+    outline: 0;
+    color: var(--zu-gray-800);
+    font-size: 1.15rem;
+    font-weight: 700;
+    padding-bottom: 1.75rem;
+}
+
+
+/* 针对PC */
+@media (min-width: 768px) {
+    .lightBgBox .rowFormBox .formBox{
+        width: 70%;
+    }
+    .setMultipleProduct .setRow{
+        flex-wrap: initial;
+    }
+}
+
+
+/* Message toolbar */
+.messageToolbar{
+    padding: 0 30px;
+}
+.messageToolbar .searchBar{
+    gap: 10px;
+}
+.messageToolbar .searchBar .sItem:nth-child(1){
+    width: 200px;
+}
+.messageToolbar .searchBar .sItem:nth-child(2){
+    width: 500px;
+}
+.messageToolbar .searchBar .selectDropBtn{
+    padding: .55rem .875rem;
+}
+.messageToolbar .searchBar .selectList{
+    margin: 0;
+    padding: 5px 0;
+    list-style-type: none;
+}
+.messageToolbar .searchBar .selectList li{
+    cursor: pointer;
+    padding: 5px 20px;
+}
+.messageToolbar .searchBar .selectList li:hover{
+    background-color: var(--zu-gray-100);
+}
+.messageToolbar .searchBar .searchGroup{}
+.messageToolbar .searchBar .searchGroup .dropBox{
+    width: 150px;
+}
+.messageToolbar .searchBar .searchGroup .dropBox .selectDropBtn{
+    border-radius: .375rem 0 0 .375rem;
+}
+.messageToolbar .searchBar .searchGroup .inputBox{
+    flex: 1;
+}
+.messageToolbar .searchBar .searchGroup .inputBox .form-control{
+    border: var(--zu-border-line);
+    border-left: 0;
+    border-radius: 0 .375rem .375rem 0;
+}
+
+.messageToolbar .tabsBtnBar{
+    border-bottom: 1px solid var(--zu-gray-200);
+    margin: 5px 0;
+}
+.messageToolbar .tabsBtnBar .btnBox{
+    padding: 0 5px;
+    position: relative;
+}
+.messageToolbar .tabsBtnBar .btnBox.active::before{
+    background-color: #0b6ac8;
+    content: '';
+    width: 100%;
+    height: 2px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+.messageToolbar .tabsBtnBar .btnBox .tBtn{
+    border: 0;
+    background-color: transparent;
+    box-shadow: none;
+    padding: 10px 5px;
+}
+.messageToolbar .tabsBtnBar .btnBox .tBtn span{
+    border-radius: var(--zu-border-radius-max);
+    background-color: var(--zu-danger);
+    color: white;
+    padding: 0px 4px;
+    line-height: 1;
+    font-size: var(--zu-font-size-md);
+}
+.messageToolbar .tabsBtnBar .btnBox.active .tBtn{
+    color: #0b6ac8;
+    font-weight: 700;
+}
+
+.messageToolbar .markBtnBar{
+    margin: 10px 0 0 0;
+    gap: 5px;
+}
+.messageToolbar .markBtnBar .itemBox{}
+.messageToolbar .markBtnBar .itemBox .outlineBtn{
+    border: 1px solid var(--zu-gray-600);
+    padding: 5px 10px;
+}
+.messageToolbar .markBtnBar .itemBox .outlineBtn:hover{
+    background-color: var(--zu-gray-200);
+}
+.messageToolbar .markBtnBar .itemBox.disable{
+    position: relative;
+}
+.messageToolbar .markBtnBar .itemBox.disable::before{
+    content: '';
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    opacity: .5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+/* 上传文件 */
+.uploadFilesBoxBtn{
+    border-radius: var(--zu-border-radius-lg);
+    border: .1rem dashed var(--zu-gray-400);
+    background-color: var(--zu-gray-100);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    padding: 20px;
+}
+.uploadFilesBoxBtn h5, .uploadFilesBoxBtn p{
+    width: 100%;
+}
+.uploadFilesBoxBtn h5{
+    font-size: .875rem;
+    color: #4f97c8;
+}
+.uploadFilesBoxBtn p{
+    font-size: .75rem;
+    color: var(--zu-gray-600);
+    font-weight: normal;
+}
+.uploadFilesBoxBtn .uploadBtn{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    cursor: pointer;
+    opacity: 0;
+}
+.uploadedBox{
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+    border-radius: .375rem;
+    padding: 20px;
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.uploadedBox .box-1{
+    width: 50px;
+}
+.uploadedBox .box-2{
+    flex: 1;
+    padding: 0 15px;
+    font-weight: normal;
+    font-size: .75rem;
+}
+.uploadedBox .box-1 .close-btn{
+    border: 0;
+    background: none;
+    float: right;
+}
+.uploadedBox .box-1 .close-btn:hover{
+    opacity: .5;
+}
+
+.sellProductSubtitle{
+    color: #666;
+    margin-bottom: 10px;
+}
+.sellProductFormBar a{
+    font-weight: normal;
+}
+.sellProductFormBar a:hover{
+    color: var(--zu-danger);
+}
+.sellProductFormBar a:nth-child(2){
+    margin-left: 30px;
+}
+
+/* Title Group */
+.feature-title-group-bar{
+    display: flex;
+    align-items: center;
+}
+.feature-title-group-bar .bigTitle{
+    margin-right: 15px;
+    white-space: nowrap;
+}
+.feature-title-group-bar .tips{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    font-size: 0.875rem;
+    color: #111;
+    padding: 5px 7px;
+    margin-left: auto;
+    border-left: 2px solid darkorange;
+    border-top: 1px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.feature-title-group-bar .tips svg{
+    color: darkorange;
+}
+.feature-title-group-bar .tips .icon-box{
+    width: 14px;
+    height: 14px;
+}
+.feature-title-group-bar .tips .text-box{
+    padding-left: 5px;
+    flex: 1;
+}
+/* Link Bar */
+.zu-link-bar{
+    display: flex;
+    justify-content: end;
+    padding-top: 5px;
+    color: #7b7b83;
+    font-weight: bold;
+    font-size: 1rem;
+}
+.zu-link-bar a{
+    font-weight: bold;
+    color: #dc2b2e;
+    margin-left: 5px;
+}
+.zu-link-bar a:hover{
+    color: red;
+    text-decoration: underline;
+}
+
+/* ---------------- Phone ----------------- */
+@media (max-width: 767.98px) {
+    /* Title Group */
+    .feature-title-group-bar{
+        flex-wrap: wrap;
+    }
+    .feature-title-group-bar .bigTitle{
+        width: 100%;
+        margin: 0;
+    }
+    .feature-title-group-bar .tips{
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    /* 创建列表 */
+    .mainBg{
+        padding: 0;
+    }
+    .userCenterContainer{
+        width: initial;
+        max-width: initial;
+        padding: 0;
+        --bs-gutter-x: 0;
+    }
+    .userCenterContainer.zu-py-lg{
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+    .userCenterWrapper{
+        margin: 1.5rem 0;
+    }
+    .userCenterPageMain, .userCenterSidebar{
+        width: 100%;
+        padding: 0;
+    }
+    .userCenterPageMain{
+        order: 2;
+    }
+    .userCenterPageMain>.zu-small-alert{
+        margin: 0 1rem;
+    }
+    .userCenterSidebar{
+        order: 1;
+    }
+    .pageTitleBar{
+        flex-wrap: wrap;
+    }
+    .pageTitleBar .bigTitle{
+        width: 100%;
+        font-size: 1.75rem;
+        padding: 0 1rem;
+    }
+    .pageTitleBar .btnWrap .iconBtn{
+        margin-left: .25rem;
+        font-size: var(--zu-font-size-sm);
+    }
+    .pageTitleBar.zu-py-md{
+        padding-top: .5rem;
+        padding-bottom: .5rem;
+    }
+    .userCenterSidebar .tipInfoPanel{
+        border-radius: 0;
+    }
+    .lightBgBox .rowFormBox .textLabel{
+        width: 100%;
+    }
+    .tipInfoPanel{
+        /*background-color: white;*/
+        padding: 1rem;
+    }
+    .tipInfoPanel .iconBox{
+        border-radius: 0 0 .5rem 0;
+        width: 18px;
+        height: 18px;
+        font-size: 1rem;
+    }
+
+    /* 价格设定 */
+    .setMultipleProduct .setBar{
+        padding: 1rem;
+    }
+    .setPriceForm{
+        flex-wrap: wrap;
+        padding: 0;
+        gap: initial;
+        margin: 0 -.5rem;
+    }
+    .setPriceForm .zu-form-item{
+        flex: initial;
+        width: 50%;
+        padding: .5rem;
+    }
+    .setMultipleProduct .zu-list{
+        border: 0;
+        border-radius: 0;
+        overflow: initial;
+    }
+    .setMultipleProduct .zu-list .zu-li-item{
+        border-radius: var(--zu-border-radius-lg);
+        border: 1px solid var(--zu-gray-300);
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+        background-color: white;
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+    .setMultipleProduct .discountList .zu-li-item .setRow{
+        flex-wrap: wrap;
+        padding: 1rem 0 .5rem 0;
+    }
+    .setMultipleProduct .discountList .zu-li-item .setRow .zu-form-item{
+        border-right: 0!important;
+        flex: initial;
+        flex-wrap: wrap;
+        width: 100%;
+        padding: .25rem 1rem;
+    }
+    .setMultipleProduct .discountList .zu-li-item .setRow .zu-form-item .formLabel{
+        width: 40%;
+    }
+    .setMultipleProduct .discountList .zu-li-item .setRow .zu-form-item .formControl{
+        width: 60%;
+    }
+    .setMultipleProduct .discountList .zu-li-item .setRow .unit-price-item>div{
+        width: 100%;
+    }
+    .setMultipleProduct .discountList .zu-li-item .setRow .unit-price-item .this-row-li-conversion{
+        padding-left: 40%;
+    }
+    .setMultipleProduct .discountList .zu-li-item .setRow .zu-form-item:nth-child(3), .setMultipleProduct .discountList .zu-li-item .setRow .zu-form-item:nth-child(4){
+        border-top: 1px solid var(--zu-gray-300);
+        width: 50%;
+        padding-top: 1.25rem;
+    }
+    .setMultipleProduct .discountList .zu-li-item .setRow .zu-form-item:nth-child(3) > .formLabel, .setMultipleProduct .discountList .zu-li-item .setRow .zu-form-item:nth-child(4) > .formLabel{
+        width: auto;
+        white-space: normal;
+    }
+    .setMultipleProduct .setRow .zu-form-item.unit-price-item{
+        min-width: initial;
+    }
+    .insurance_show{
+        flex-wrap: wrap;
+    }
+
+    /* 自定义产品 */
+    .subProductAttributeChooseWrapper .productAttributeChoose .zu-form-item{
+        width: 50%;
+    }
+
+    /* Step */
+    .multi-steps > li{
+        font-size: .6rem;
+        line-height: 1.2;
+    }
+
+    .lightBgBox{
+        border-radius: 0;
+        border: 0;
+        padding: 1.5rem;
+    }
+    .lightBgBox .bigTitle{
+        font-size: 1.5rem;
+    }
+
+    .zu-small-container{
+        max-width: 100%;
+        padding-top: 0;
+    }
+    .zu-small-container .termsTextWrapper{
+        margin-top: 0!important;
+    }
+
+    .termsTextWrapper .zu-radio{
+        min-width: auto;
+    }
+    .termsTextWrapper .footBtnBox button{
+        min-width: auto;
+    }
+
+    .lastWrap{
+        padding: 0 1rem;
+    }
+
+    .upload-tips{}
+
+    /* Product Info */
+    .createCustomProducts .cMainBody .productInfoForm{
+        margin: 0 -.5rem;
+    }
+    .createCustomProducts .cMainBody .productInfoForm .rowFormBox{
+        padding: .5rem;
+    }
+    .createCustomProducts .cMainBody .productInfoForm .rowFormBox .formBox{
+        flex: initial;
+        width: 100%;
+    }
+
+    /* Guide */
+    .guideListWrap{
+        align-items: baseline;
+        flex-wrap: wrap;
+    }
+    .guideListWrap .zu-form-item{
+        border: 0;
+        flex: initial;
+        width: 50%!important;
+        padding: 0;
+    }
+
+    /* Message toolbar */
+    .messageToolbar{
+        padding: 0;
+    }
+    .messageToolbar form{
+        width: 100%!important;
+    }
+    .messageToolbar .searchBar{
+        flex-wrap: wrap;
+    }
+    .messageToolbar .searchBar .sItem:nth-child(1){
+        width: 100%;
+    }
+    .messageToolbar .searchBar .searchGroup .dropBox{
+        width: 100px;
+    }
+
+    .messageToolbar .tabsBtnBar, .messageToolbar .markBtnBar{
+        flex-wrap: wrap;
+    }
+
+    .messageToolbar .tabsBtnBar{
+        border-bottom: 1px solid var(--zu-gray-400);
+        margin: 0;
+    }
+
+    .messageToolbar .markBtnBar{
+        margin: 10px 0 5px 0;
+    }
+
+    /* 创建列表 */
+    .zu-layout-row{
+        --bs-gutter-x: .5rem;
+    }
+    .custom_checkbox_item{
+        margin-bottom: .5rem;
+    }
+    .zu-checkbox-col{
+        width: 50%;
+    }
+
+    /* 上传 */
+    .uploadedBox{
+        padding: 10px;
+    }
+    .uploadedBox .box-1{
+        width: 20px;
+    }
+    .uploadedBox .box-2{
+        word-wrap: break-word;
+        word-break: break-all;
+        line-height: 1.2;
+    }
+
+    .item_attr_show_text .attrList, .item_attr_show_text .platformList, .item_attr_show_text .deviceList, .item_attr_show_text .areaList, .item_attr_show_text .countryList{
+        width: 100%!important;
+    }
+}

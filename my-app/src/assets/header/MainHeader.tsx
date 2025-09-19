@@ -1,5 +1,5 @@
 // MainBar.tsx
-import { MessageSquare, Search, User } from 'lucide-react';
+import { Search, User } from 'lucide-react';
 import { useUser } from '../../context/UserContext';
 import { useAppNavigation } from '../../hooks/useAppNavigation';
 
@@ -37,7 +37,7 @@ const MainBar: React.FC = () => {
                     {isAuthenticated ? (
                         <button
                             onClick={gotoUserCenter}
-                            className="hidden sm:flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md px-1 py-0.5"
+                            className="flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md px-1 py-0.5"
                         >
                             <User className="w-5 h-5" />
                             <span>{user?.displayName || 'User'}</span>
@@ -46,7 +46,7 @@ const MainBar: React.FC = () => {
                         !isLoginPage() ? (
                             <button 
                                 onClick={goToLogin}
-                                className="hidden sm:flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md px-1 py-0.5"
+                                className="flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md px-1 py-0.5"
                             >
                                 <User className="w-5 h-5" />
                                 <span>Login</span>
@@ -54,17 +54,14 @@ const MainBar: React.FC = () => {
                         ) : (
                             <button 
                                 onClick={goToRegister}
-                                className="hidden sm:flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md px-1 py-0.5"
+                                className="flex items-center space-x-1 hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md px-1 py-0.5"
                             >
                                 <User className="w-5 h-5" />
                                 <span>Register</span>
                             </button>
                         )
                     )}
-                    <button className="relative hover:text-blue-600 transition-colors duration-200 ease-in-out rounded-md p-1">
-                        <MessageSquare className="w-6 h-6" />
-                        <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">0</span>
-                    </button>
+
                 </div>
             </div>
   );

@@ -1,0 +1,31 @@
+/* Typography */
+.zu-display-1{
+    font-size: 80px;
+}
+.zu-display-2{
+    font-size: 70px;
+}
+.zu-display-3{
+    font-size: 60px;
+}
+.zu-display-4{
+    font-size: 50px;
+}
+.zu-display-5{
+    font-size: 40px;
+}
+.zu-display-6{
+    font-size: 30px;
+}
+
+/* Global */
+:root{
+    --zu-font-size-sm:12px;
+    --zu-body-font-size: 14px;
+    --zu-font-size-lg:16px;
+    --zu-font-size-xl:18px;
+    --zu-font-size-2xl:22px;
+    --zu-font-size-3xl:24px;
+    --zu-font-size-4xl:26px;
+}
+

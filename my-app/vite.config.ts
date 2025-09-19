@@ -10,5 +10,8 @@ export default defineConfig({
   plugins: [tailwindcss],
     },
   },
+  server: {
+    allowedHosts: ["wezd.io.vn", "auth.wezd.io.vn", "pay.wezd.io.vn"],
+  }
 })
     

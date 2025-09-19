@@ -11,7 +11,7 @@ const MainBanner = () => {
                 Chào mừng đến với Z2U.com
             </h1>
 
-            {/* Nhiều nút */}
+            {/* Nhiều nút
             <div className="flex gap-4 flex-wrap justify-center absolute bottom-8">
                 <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-white/10 backdrop-filter backdrop-blur-sm border border-white/20 hover:bg-white/20 transition duration-300 ease-in-out transform hover:-translate-y-1 cursor-pointer min-w-[100px]">
                     <div className="text-2xl text-white mb-2">🎮</div>
@@ -33,7 +33,7 @@ const MainBanner = () => {
                         Ưu đãi
                     </span>
                 </div>
-            </div>
+            </div> */}
         </section>
     );
 };

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const Footer = () => {
     return (
         <footer>
@@ -13,37 +15,37 @@ const Footer = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 mr-10 ml-20">
                     <div>
-                        <h4 className="text-white font-semibold mb-4">Về Chúng Tôi</h4>
+                        <h4 className="text-black font-semibold mb-4">Về Chúng Tôi</h4>
                         <ul className="space-y-2">
-                            <li><a href="#" className="hover:text-white transition">Giới thiệu</a></li>
-                            <li><a href="#" className="hover:text-white transition">Liên hệ</a></li>
-                            <li><a href="#" className="hover:text-white transition">Tuyển dụng</a></li>
+                            <li><Link to="/about" className="hover:text-black transition">Giới thiệu</Link></li>
+                            <li><Link to="/contact" className="hover:text-black transition">Liên hệ</Link></li>
+                            <li><Link to="/careers" className="hover:text-black transition">Tuyển dụng</Link></li>
                         </ul>
                     </div>
                     <div>
-                        <h4 className="text-white font-semibold mb-4">Hỗ Trợ</h4>
+                        <h4 className="text-black font-semibold mb-4">Hỗ Trợ</h4>
                         <ul className="space-y-2">
-                            <li><a href="#" className="hover:text-white transition">Câu hỏi thường gặp</a></li>
-                            <li><a href="#" className="hover:text-white transition">Chính sách bảo mật</a></li>
-                            <li><a href="#" className="hover:text-white transition">Điều khoản dịch vụ</a></li>
+                            <li><Link to="/faq" className="hover:text-black transition">Câu hỏi thường gặp</Link></li>
+                            <li><Link to="/privacy-policy" className="hover:text-black transition">Chính sách bảo mật</Link></li>
+                            <li><Link to="/terms" className="hover:text-black transition">Điều khoản dịch vụ</Link></li>
                         </ul>
                     </div>
                     <div>
-                        <h4 className="text-white font-semibold mb-4">Cộng Đồng</h4>
+                        <h4 className="text-black font-semibold mb-4">Cộng Đồng</h4>
                         <div className="flex space-x-4">
-                            <a href="#" className="text-gray-400 hover:text-white transition"><i className="fab fa-facebook-f text-xl"></i></a>
-                            <a href="#" className="text-gray-400 hover:text-white transition"><i className="fab fa-twitter text-xl"></i></a>
-                            <a href="#" className="text-gray-400 hover:text-white transition"><i className="fab fa-instagram text-xl"></i></a>
-                            <a href="#" className="text-gray-400 hover:text-white transition"><i className="fab fa-youtube text-xl"></i></a>
+                            <a href="#" className="text-gray-400 hover:text-black transition"><i className="fab fa-facebook-f text-xl"></i></a>
+                            <a href="#" className="text-gray-400 hover:text-black transition"><i className="fab fa-twitter text-xl"></i></a>
+                            <a href="#" className="text-gray-400 hover:text-black transition"><i className="fab fa-instagram text-xl"></i></a>
+                            <a href="#" className="text-gray-400 hover:text-black transition"><i className="fab fa-youtube text-xl"></i></a>
                         </div>
-                        <h4 className="text-white font-semibold mb-2 mt-6">Tải Ứng Dụng</h4>
+                        <h4 className="text-black font-semibold mb-2 mt-6">Tải Ứng Dụng</h4>
                         <div className="flex space-x-2">
                             <a href="#"><img src="https://placehold.co/100x30/000000/ffffff?text=AppStore" alt="App Store" className="h-8 rounded" /></a>
                             <a href="#"><img src="https://placehold.co/100x30/000000/ffffff?text=GooglePlay" alt="Google Play" className="h-8 rounded" /></a>
                         </div>
                     </div>
                     <div>
-                        <h4 className="text-white font-semibold mb-4">Stay Connected</h4>
+                        <h4 className="text-black font-semibold mb-4">Stay Connected</h4>
                         <p className="text-sm mb-4">Đăng ký nhận tin tức và ưu đãi mới nhất.</p>
                         <div className="flex">
                             <input type="email" placeholder="Email của bạn" className="p-2 rounded-l-md bg-gray-700 border border-gray-600 text-white text-sm flex-grow focus:outline-none focus:border-primary-red" />

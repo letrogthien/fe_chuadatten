@@ -1,0 +1,410 @@
+.my-dashboard-body .alert-success{
+    background-color: #47c590;
+    border-color: #47c590;
+    padding: 5px 8px;
+    border-radius: 0.25rem;
+    margin-top: -10px;
+}
+.my-dashboard-body .alert-danger{
+    padding: 5px 8px;
+    border-radius: 0.25rem;
+    margin-top: -10px;
+}
+.btn-back-page{
+    background-color: #98a3b2;
+    border-color: #98a3b2;
+    border-radius: 0!important;
+    color: #fff;
+    font-size: .875rem;
+    font-weight: 700;
+    display: block;
+    margin: 15px 0;
+    height: 38px;
+    margin-right: 30px;
+}
+
+
+/* 输入验证码 */
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+            radial-gradient(farthest-side,#ffa516 94%,#0000) top/8px 8px no-repeat,
+            conic-gradient(#0000 30%,#ffa516);
+    -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
+    animation: l13 1s infinite linear;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -25px;
+    margin-left: -25px;
+    z-index: 999;
+
+    display: none;
+}
+@keyframes l13{
+    100%{transform: rotate(1turn)}
+}
+
+.w-100{
+    width: 100%;
+}
+.authenticatorWrapper{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.authenticatorWrapper .authenBox{
+    width: 380px;
+    min-height: 150px;
+    text-align: center;
+}
+/* 提示 */
+.authenticatorWrapper .authenBox .tips{
+    border-bottom: 1px solid #d7d7d7;
+    padding-bottom: 10px;
+}
+.authenticatorWrapper .authenBox .formBox{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 15px;
+}
+.authenticatorWrapper .authenBox .formBox .inputList{
+    display: flex;
+    padding-top: 10px;
+}
+.authenticatorWrapper .authenBox .formBox .inputList .code-input{
+    border: 1px solid #cdcdd6;
+    border-radius: .35rem;
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    line-height: 38px;
+    font-size: 18px;
+    margin: 3px;
+    padding: 0;
+}
+.contactCustomerService{
+    padding-top: 15px;
+}
+.contactCustomerService a:hover{
+    color: #e1251b;
+}
+.authenticatorWrapper .authenBox .btnWrap{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.authenticatorWrapper .authenBox .btnWrap button{
+    margin: 20px 10px;
+    font-size: 14px;
+}
+.outLineBtn{
+    border: 1px solid #ddd;
+    border-radius: .25rem;
+    background: none;
+    padding: 12px 15px;
+    flex: 1;
+}
+.continueBtn{
+    border: 1px solid #ea3628;
+    background: #ea3628;
+    border-radius: .25rem;
+    color: white;
+    padding: 12px 15px;
+    flex: 1;
+}
+.authenticatorWrapper .authenBox .btnWrap .disabled{
+    background: #f3f3f7!important;
+    border-color: #f3f3f7!important;
+    color: #939395!important;
+    cursor: not-allowed;
+}
+.googleAuthenticationModal .modal-dialog .modal-content .modal-footer .disabled{
+    background: #f3f3f7!important;
+    border-color: #f3f3f7!important;
+    color: #939395!important;
+    cursor: not-allowed;
+}
+.googleAuthenticationModal .modal-dialog .modal-content .modal-body{
+    position: relative;
+}
+
+/* 切换开关按钮 */
+.switchWrapper{
+    display: inline-block;
+    position: relative;
+    height: 26px;
+}
+.switchWrapper .showModal{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 26px;
+}
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+input:checked + .slider {
+    background-color: #2196F3;
+}
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+}
+/* Rounded sliders */
+.slider.round {
+    border-radius: 26px;
+}
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* 个人中心多重身份验证Bar */
+.multipleAuthentication{
+    position: relative;
+    margin-bottom: 5px;
+    background: #FFFFFF;
+    border-radius: 0;
+    border: 0;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 0px 5px 0px, rgba(0, 0, 0, 0.06) 0px 0px 1px 0px;
+    /*background: linear-gradient(to right, #f7f8f9, #ffffff);*/
+    padding: 10px 25px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.multipleAuthentication .leftBox{
+    width: 80%;
+    text-align: left;
+}
+.multipleAuthentication .leftBox p{
+    font-size: .875rem;
+    margin-bottom: 10px;
+}
+.multipleAuthentication .rightBox{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
+    width: 20%;
+}
+
+/* Modal */
+.googleAuthenticationModal .modal-dialog{
+    margin-top: 20rem;
+    width: 480px;
+}
+.googleAuthenticationModal .modal-dialog .modal-content{
+    border-radius: 0;
+}
+.googleAuthenticationModal .modal-dialog .modal-content .form-control{
+    border-radius: 0;
+}
+.googleAuthenticationModal .modal-dialog .modal-content .modal-footer{
+    border-top: 0;
+}
+.googleAuthenticationModal .modal-dialog .modal-content .modal-footer button{
+    border-radius: 0;
+    font-size: .875rem;
+    font-weight: bold;
+}
+.googleAuthenticationModal .modal-dialog .modal-content .modal-footer .btn-default{
+    border: 1px solid #ddd;
+    background: none;
+    color: #414245;
+}
+.googleAuthenticationModal .modal-dialog .modal-content .modal-footer .btn-default:hover{
+    background: #f6f7f8;
+    border-color: #f6f7f8;
+    color: #414245;
+}
+.googleAuthenticationModal .mfaLoginFooter{
+    display: flex;
+    gap: 20px;
+    padding-top: 25px;
+}
+.googleAuthenticationModal .mfaLoginFooter button{
+    border-radius: .275rem;
+    flex: 1;
+}
+.googleAuthenticationModal .mfaLoginFooter .btn-default{
+    border: 1px solid #ddd;
+    background: none;
+    color: #414245;
+}
+.googleAuthenticationModal .mfaLoginFooter .btn-default:hover{
+    background: #f6f7f8;
+    border-color: #f6f7f8;
+    color: #414245;
+}
+.googleAuthenticationModal .mfaLoginFooter .disabled{
+    background: #f3f3f7!important;
+    border-color: #f3f3f7!important;
+    color: #939395!important;
+    cursor: not-allowed;
+}
+.googleAuthenticationModal .labelTitle{
+    font-size: 14px;
+    font-weight: normal;
+    color: #414245;
+    margin-bottom: 10px;
+}
+.googleAuthenticationModal .forgotPassword{
+    width: 100%;
+    padding-top: 10px;
+    text-align: right;
+    font-size: 14px;
+}
+.googleAuthenticationModal .forgotPassword a:hover{
+    color: #e1251b;
+}
+
+/* 显示二维码 */
+.qrCode{
+    margin-bottom: 15px;
+}
+
+.useSecurityCodeClose{
+    border: 1px solid #f7f8f9;
+    border-radius: .35rem;
+    background: #f7f8f9;
+    color: #585b64;
+    margin-top: 15px;
+}
+.useSecurityCodeClose:hover{
+    color: #414245!important;
+    border-color: #f1f2f3;
+    background-color: #f1f2f3;
+}
+
+.mfaBindSucces{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.mfaBindSucces .succesIcon{
+    font-size: 4.5rem;
+}
+
+.googleAuthenticationModal .modal-lg{
+    width: 720px!important;
+}
+
+.backupCodeReminder{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: #f6f8fc;
+    border-color: #f6f8fc;
+    padding: 15px;
+    border-radius: .875rem;
+    margin-top: 20px;
+}
+.backupCodeReminder .codeText{
+    padding: 15px 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+.backupCodeReminder .codeText .recoveryCode{
+    color: #ee4e25!important;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    border: 2px dashed #c7cfd6;
+    padding: 3px 10px;
+    border-radius: .25rem;
+    margin-left: 5px;
+}
+.backupCodeReminder .codeText .copyThisCode{
+    font-size: 12px;
+    line-height: 1;
+    padding: 10px;
+    border: 1px solid #dbdee2;
+    border-radius: .25rem;
+    background-color: #fff;
+    margin-left: 5px;
+    font-weight: 700;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+}
+
+.copySuccessTips{
+    width: 20rem;
+    min-height: 1rem;
+    padding: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left: -01rem;
+    border-radius: 1rem;
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+    z-index: 999;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
+@media (max-width: 767.98px) {
+    .authenticatorWrapper .authenBox{
+        width: 100%;
+    }
+    .googleAuthenticationModal .modal-dialog{
+        width: auto;
+        margin-top: 5rem;
+    }
+    .authenticatorWrapper .authenBox .formBox .inputList .code-input{
+        width: 40px;
+        height: 40px;
+    }
+    .googleAuthenticationModal .modal-dialog .modal-content .modal-body, .googleAuthenticationModal .modal-dialog .modal-content .modal-footer{
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .googleAuthenticationModal .modal-lg{
+        width: auto!important;
+    }
+}

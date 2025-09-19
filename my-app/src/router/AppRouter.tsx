@@ -1,13 +1,25 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from '../Layout';
+import AboutPage from '../aboutpage/AboutPage';
+import CareersPage from '../aboutpage/CareersPage';
+import ContactPage from '../aboutpage/ContactPage';
+import FaqPage from '../aboutpage/FaqPage';
+import PrivacyPolicyPage from '../aboutpage/PrivacyPolicyPage';
+import TermsPage from '../aboutpage/TermsPage';
 import ActivateAccount from '../assets/pages/ActivateAccount';
+import CategoryChildren from '../assets/pages/CategoryChildren';
+import Checkout from '../assets/pages/Checkout';
 import ForgotPassword from '../assets/pages/ForgotPassword';
 import Home from '../assets/pages/Home';
 import Login from '../assets/pages/Login';
 import LogoutAll from '../assets/pages/LogoutAll';
+import Payment from '../assets/pages/Payment';
+import ProductDetail from '../assets/pages/ProductDetail';
+import Products from '../assets/pages/Products';
+import ProductsByCategory from '../assets/pages/ProductsByCategory';
 import Register from '../assets/pages/Register';
 import UserCenter from '../assets/pages/UserCenter';
-import UserInfo from '../assets/pages/UserInfo';
+import VNPayReturn from '../assets/pages/VNPayReturn';
 import { ROUTES } from '../constants/routes';
 
 // Error boundary component
@@ -52,10 +64,7 @@ const router = createBrowserRouter([
         path: "forgot-password",
         element: <ForgotPassword />,
       },
-      {
-        path: ROUTES.USER_INFO.replace(/^\//, ""),
-        element: <UserInfo />,
-      },
+
       {
         path: "activate",
         element: <ActivateAccount />,
@@ -68,15 +77,58 @@ const router = createBrowserRouter([
         path: "user-center",
         element: <UserCenter />,
       },
-      // Add more routes here as needed
-      // {
-      //   path: "profile",
-      //   element: <Profile />,
-      // },
-      // {
-      //   path: "cart",
-      //   element: <Cart />,
-      // },
+      {
+        path: "about",
+        element: <AboutPage />,
+      },
+      {
+        path: "contact",
+        element: <ContactPage />,
+      },
+      {
+        path: "careers",
+        element: <CareersPage />,
+      },
+      {
+        path: "faq",
+        element: <FaqPage />,
+      },
+      {
+        path: "privacy-policy",
+        element: <PrivacyPolicyPage />,
+      },
+      {
+        path: "terms",
+        element: <TermsPage />,
+      },
+      {
+        path: "products",
+        element: <Products />,
+      },
+      {
+        path: "category/:id",
+        element: <CategoryChildren />,
+      },
+      {
+        path: "products/category/:categoryId",
+        element: <ProductsByCategory />,
+      },
+      {
+        path: "product/:productId",
+        element: <ProductDetail />,
+      },
+      {
+        path: "checkout",
+        element: <Checkout />,
+      },
+      {
+        path: "payment",
+        element: <Payment />,
+      },
+      {
+        path: "vnpay-return",
+        element: <VNPayReturn />,
+      },
     ],
   },
 ]);
