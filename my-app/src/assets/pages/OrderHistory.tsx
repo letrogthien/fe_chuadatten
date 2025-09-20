@@ -5,7 +5,6 @@ import type { components } from '../../api-types/transactionService';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import { useUser } from '../../context/UserContext';
 import * as transactionApi from '../../services/transactionApi';
-import * as walletApi from '../../services/walletApi';
 
 type OrderDto = components['schemas']['OrderDto'];
 type ProductDto = ProductComponents['schemas']['ProductDto'];
@@ -129,6 +128,11 @@ const OrderHistory: React.FC = () => {
 
   // Simple filtering logic
   const filteredOrders = allOrdersCache.filter(order => {
+    // Không hiển thị đơn hàng đã hủy
+    if (order.status === 'CANCELLED') {
+      return false;
+    }
+    
     const orderMatch = selectedOrderStatus === 'ALL' || order.status === selectedOrderStatus;
     return orderMatch;
   });
@@ -143,6 +147,11 @@ const OrderHistory: React.FC = () => {
   const getOrderStatusCounts = () => {
     const counts: Record<string, number> = {};
     allOrdersCache.forEach(order => {
+      // Không đếm đơn hàng đã hủy
+      if (order.status === 'CANCELLED') {
+        return;
+      }
+      
       const status = order.status || 'UNKNOWN';
       counts[status] = (counts[status] || 0) + 1;
     });
@@ -296,38 +305,10 @@ const OrderHistory: React.FC = () => {
     navigate(`/payment?orderId=${orderId}`);
   };
 
-  const handleRetryPayment = async (orderId?: string) => {
+  const handleRetryPayment = (orderId?: string) => {
     if (!orderId) return;
-    
-    try {
-      // First get the payment for this order
-      const payment = await walletApi.getPaymentByOrderId(orderId);
-      
-      if (!payment.id) {
-        alert('Không tìm thấy thông tin thanh toán cho đơn hàng này');
-        return;
-      }
-      
-      // Call retry payment API
-      const retryResult = await walletApi.retryPayment(payment.id);
-      
-      if (retryResult) {
-        alert('Đã gửi yêu cầu thử lại thanh toán. Vui lòng kiểm tra lại sau ít phút.');
-        
-        // Optionally reload orders to get updated status
-        await loadAllOrders();
-      } else {
-        alert('Không thể thử lại thanh toán. Vui lòng thử lại sau.');
-      }
-      
-    } catch (error) {
-      console.error('Error retrying payment:', error);
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : 'Có lỗi xảy ra khi thử lại thanh toán';
-      
-      alert(`Không thể thử lại thanh toán: ${errorMessage}`);
-    }
+    // Navigate to payment redirect page for retry with retry flag
+    navigate(`/payment-redirect?orderId=${orderId}&method=vnpay&retry=true`);
   };
 
   if (loading) {
@@ -374,7 +355,7 @@ const OrderHistory: React.FC = () => {
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              Tất cả ({allOrdersCache.length})
+              Tất cả ({allOrdersCache.filter(order => order.status !== 'CANCELLED').length})
             </button>
             {['PAID', 'PAYING', 'READY_PAY'].map(status => (
               <button

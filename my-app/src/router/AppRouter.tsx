@@ -14,6 +14,7 @@ import Home from '../assets/pages/Home';
 import Login from '../assets/pages/Login';
 import LogoutAll from '../assets/pages/LogoutAll';
 import Payment from '../assets/pages/Payment';
+import PaymentRedirect from '../assets/pages/PaymentRedirect';
 import ProductDetail from '../assets/pages/ProductDetail';
 import Products from '../assets/pages/Products';
 import ProductsByCategory from '../assets/pages/ProductsByCategory';
@@ -124,6 +125,10 @@ const router = createBrowserRouter([
       {
         path: "payment",
         element: <Payment />,
+      },
+      {
+        path: "payment-redirect",
+        element: <PaymentRedirect />,
       },
       {
         path: "vnpay-return",

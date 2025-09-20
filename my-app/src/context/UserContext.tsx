@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { components } from '../api-types/userService';
 import apiClient from '../services/apiClient';
+import { useWebSocket } from './WebSocketContext';
 
 interface UserState {
     user: components['schemas']['UserInfDto'] | null;
@@ -22,19 +23,44 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    
+    // Get WebSocket context to trigger reconnect
+    const { forceConnect, webSocketService } = useWebSocket();
+    
+    // Flag to prevent multiple simultaneous /me calls
+    const [isFetchingMe, setIsFetchingMe] = useState(false);
+
+    // Helper function to trigger WebSocket reconnect after successful /me call
+    const triggerWebSocketReconnect = React.useCallback(() => {
+        console.log('✅ /me API successful - connecting WebSocket...');
+        setTimeout(() => {
+            forceConnect();
+        }, 500); // Small delay to ensure cookie is set
+    }, [forceConnect]);
 
     // ...existing code...
 
     // Check session on mount
     useEffect(() => {
         const fetchMe = async () => {
+            if (isFetchingMe) {
+                console.log('⚠️ /me already in progress, skipping...');
+                return;
+            }
+            
+            setIsFetchingMe(true);
             setLoading(true);
             try {
+                console.log('📞 Calling /auth/me...');
                 // Lấy thông tin auth
                 const authRes = await apiClient.get('/api/v1/user-service/auth/me');
 
                 setAuth(authRes.data.data);
                 setIsAuthenticated(true);
+                
+                // Trigger WebSocket reconnect after successful /me
+                triggerWebSocketReconnect();
+                
                 // Lấy thông tin user chi tiết
                 if (authRes.data.data?.id) {
                     const userRes = await apiClient.get(`/api/v1/user-service/users/id/${authRes.data.data.id}`);
@@ -44,17 +70,25 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 }
 
             } catch (err: any) {
-               await refresh();
-
+                console.error('Failed to fetch /me, trying refresh...', err);
+                try {
+                    await refresh();
+                } catch (refreshError) {
+                    console.error('Refresh also failed:', refreshError);
+                    // Clear session if both /me and refresh fail
+                    clearSession();
+                }
             } finally {
                 setLoading(false);
+                setIsFetchingMe(false);
             }
         };
         fetchMe();
-    }, []);
+    }, []); // Remove triggerWebSocketReconnect from dependencies to avoid infinite loop
 
     // Login
     const login = async (data: components['schemas']['LoginRequest']) => {
+        setIsFetchingMe(true);
         setLoading(true);
         setError(null);
         try {
@@ -70,6 +104,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const authRes = await apiClient.get('/api/v1/user-service/auth/me');
             setAuth(authRes.data.data);
             setIsAuthenticated(true);
+            
+            // Trigger WebSocket reconnect after successful login
+            triggerWebSocketReconnect();
+            
             if (authRes.data.data?.id) {
                 const userRes = await apiClient.get(`/api/v1/user-service/users/id/${authRes.data.data.id}`);
                 setUser(userRes.data.data);
@@ -84,6 +122,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setIsAuthenticated(false);
         } finally {
             setLoading(false);
+            setIsFetchingMe(false);
         }
     };
 
@@ -94,7 +133,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             await apiClient.post('/api/v1/user-service/auth/logout');
             await apiClient.post('/api/v1/user-service/auth/clear-cookie');
         } finally {
+            // Disconnect WebSocket when logging out
+            if (webSocketService) {
+                console.log('🔌 Disconnecting WebSocket on logout...');
+                webSocketService.disconnect();
+            }
+            
             setUser(null);
+            setAuth(null);
             setIsAuthenticated(false);
             setLoading(false);
         }
@@ -105,6 +151,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Refresh token
     const refresh = async () => {
+        if (isFetchingMe) {
+            console.log('⚠️ /me already in progress, skipping refresh...');
+            return;
+        }
+        
+        setIsFetchingMe(true);
         setLoading(true);
         try {
             await apiClient.post('/api/v1/user-service/auth/access-token');
@@ -112,6 +164,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const authRes = await apiClient.get('/api/v1/user-service/auth/me');
             setAuth(authRes.data.data);
             setIsAuthenticated(true);
+            
+            // Trigger WebSocket reconnect after successful refresh
+            triggerWebSocketReconnect();
+            
             if (authRes.data.data?.id) {
                 const userRes = await apiClient.get(`/api/v1/user-service/users/id/${authRes.data.data.id}`);
                 setUser(userRes.data.data);
@@ -123,6 +179,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         } finally {
             setLoading(false);
+            setIsFetchingMe(false);
         }
     };
 
@@ -131,6 +188,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
             await apiClient.post('/api/v1/user-service/auth/clear-session');
         } finally {
+            // Disconnect WebSocket when clearing session
+            if (webSocketService) {
+                console.log('🔌 Disconnecting WebSocket on session clear...');
+                webSocketService.disconnect();
+            }
+            
             setUser(null);
             setAuth(null);
             setIsAuthenticated(false);
@@ -148,7 +211,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         logout,
         refresh
-    }), [user, auth, isAuthenticated, loading, error, login, logout, refresh]);
+    }), [user, auth, isAuthenticated, loading, error]);
 
     return (
         <UserContext.Provider value={contextValue}>

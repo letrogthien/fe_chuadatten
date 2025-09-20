@@ -143,84 +143,28 @@ const Payment: React.FC = () => {
         try {
             setProcessing(true);
 
-            let payment = currentPayment;
-            
             // Check if payment already exists and is completed
-            if (payment && (payment.status === 'SUCCEEDED' || payment.status === 'COMPLETED')) {
+            if (currentPayment && (currentPayment.status === 'SUCCEEDED' || currentPayment.status === 'COMPLETED')) {
                 alert('Đơn hàng này đã được thanh toán thành công!');
                 navigate('/order-history');
                 return;
             }
             
-            // Create payment if not exists
-            if (!payment) {
-                try {
-                    const paymentMethod = selectedPaymentMethod === 'vnpay' ? 'VNPAY' : 'WALLET';
-                    payment = await walletApi.createPaymentForOrder(
-                        order.id,
-                        paymentMethod,
-                        order.totalAmount || 0,
-                        order.currency || 'VND'
-                    );
-                    setCurrentPayment(payment);
-                } catch (createError) {
-                    console.error('Cannot create payment:', createError);
-                    // For demo purposes, we'll simulate a payment
-                    alert('Tính năng thanh toán đang được phát triển. Đây là demo simulation.');
-                    navigate('/order-history');
-                    return;
+            // Navigate to payment redirect page with order and payment method info
+            navigate('/payment-redirect', {
+                state: {
+                    order: order,
+                    paymentMethod: selectedPaymentMethod,
+                    customerInfo: customerInfo
                 }
-            }
-
-            if (!payment?.id) {
-                throw new Error('Failed to get payment information');
-            }
-
-            // Process payment based on method
-            if (selectedPaymentMethod === 'vnpay') {
-                // Process VNPay payment
-                try {
-                    const paymentUrl = await walletApi.processPayment(payment.id, 'DIRECT');
-                    
-                    if (paymentUrl) {
-                        // Redirect to VNPay payment page
-                        window.location.href = paymentUrl;
-                    } else {
-                        // For demo: simulate redirect to our VNPay return page with sample data
-                        const demoReturnUrl = `/vnpay-return?vnp_Amount=${(order.totalAmount || 0) * 100}&vnp_BankCode=NCB&vnp_OrderInfo=Thanh%20toan%20don%20hang%20${order.id}&vnp_PayDate=${new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 14)}&vnp_ResponseCode=00&vnp_TxnRef=${order.id}&vnp_TransactionStatus=00&vnp_TransactionNo=${Date.now()}`;
-                        navigate(demoReturnUrl);
-                    }
-                } catch (vnpayError) {
-                    console.error('VNPay payment error:', vnpayError);
-                    // For demo: simulate successful payment
-                    const demoReturnUrl = `/vnpay-return?vnp_Amount=${(order.totalAmount || 0) * 100}&vnp_BankCode=NCB&vnp_OrderInfo=Thanh%20toan%20don%20hang%20${order.id}&vnp_PayDate=${new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 14)}&vnp_ResponseCode=00&vnp_TxnRef=${order.id}&vnp_TransactionStatus=00&vnp_TransactionNo=${Date.now()}`;
-                    navigate(demoReturnUrl);
-                }
-            } else {
-                // Process wallet payment
-                try {
-                    const result = await walletApi.processPayment(payment.id, 'WALLET');
-                    
-                    if (result) {
-                        // Payment successful
-                        alert('Thanh toán bằng ví thành công!');
-                        navigate('/order-history');
-                    } else {
-                        throw new Error('Thanh toán bằng ví thất bại');
-                    }
-                } catch (walletError) {
-                    console.error('Wallet payment error:', walletError);
-                    alert('Thanh toán bằng ví thành công! (Demo)');
-                    navigate('/order-history');
-                }
-            }
+            });
 
         } catch (error) {
-            console.error('Payment error:', error);
+            console.error('Payment initialization error:', error);
             const errorMessage = error instanceof Error 
                 ? error.message 
-                : 'Có lỗi xảy ra trong quá trình thanh toán';
-            alert(`Thanh toán thất bại: ${errorMessage}`);
+                : 'Có lỗi xảy ra khi khởi tạo thanh toán';
+            alert(`Lỗi: ${errorMessage}`);
         } finally {
             setProcessing(false);
         }
