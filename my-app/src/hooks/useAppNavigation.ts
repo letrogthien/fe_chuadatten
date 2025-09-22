@@ -63,8 +63,12 @@ export const useAppNavigation = () => {
   /**
    * Navigate to user info page
    */
-  const goToUserInfo = () => {
-    navigate(ROUTES.USER_INFO);
+  const goToUserInfo = (userId?: string) => {
+    if (userId) {
+      navigate(`${ROUTES.USER_INFO}?userId=${userId}`);
+    } else {
+      navigate(ROUTES.USER_INFO);
+    }
   };
   
   const isCurrentRoute = (route: RoutePath): boolean => {

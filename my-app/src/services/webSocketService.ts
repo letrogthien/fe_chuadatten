@@ -37,29 +37,6 @@ export class WebSocketService {
     connect(): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
-                console.log('🔗 Starting WebSocket connection...');
-                console.log('🌍 Environment:', import.meta.env.MODE);
-                
-                // Clean up any existing connection
-                if (this.client) {
-                    console.log('🧹 Cleaning up existing connection...');
-                    this.client.deactivate();
-                }
-
-                // Get access token from cookie
-                const accessToken = this.getCookie('access_token');
-                console.log('🍪 Access token from cookie:', accessToken ? 'Found' : 'Not found');
-                
-                // Require valid access token for production
-                if (!accessToken) {
-                    throw new Error('Access token not found. Please login first.');
-                }
-
-                console.log('🍪 Token preview:', accessToken.substring(0, 20) + '...');
-                console.log('🍪 All cookies:', document.cookie);
-
-                // Create STOMP client with SockJS
-                console.log('⚙️ Creating STOMP client...');
                 this.client = new Client({
                     webSocketFactory: () => {
                         console.log('🏭 Creating SockJS connection to:', `${this.baseUrl}ws`);
@@ -70,8 +47,6 @@ export class WebSocketService {
                         return socket;
                     },
                     connectHeaders: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'X-Access-Token': accessToken,
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     debug: (str) => {

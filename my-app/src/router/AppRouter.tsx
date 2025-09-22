@@ -13,6 +13,8 @@ import ForgotPassword from '../assets/pages/ForgotPassword';
 import Home from '../assets/pages/Home';
 import Login from '../assets/pages/Login';
 import LogoutAll from '../assets/pages/LogoutAll';
+import OrderDetail from '../assets/pages/OrderDetail';
+import OrderHistory from '../assets/pages/OrderHistory';
 import Payment from '../assets/pages/Payment';
 import PaymentRedirect from '../assets/pages/PaymentRedirect';
 import ProductDetail from '../assets/pages/ProductDetail';
@@ -20,6 +22,7 @@ import Products from '../assets/pages/Products';
 import ProductsByCategory from '../assets/pages/ProductsByCategory';
 import Register from '../assets/pages/Register';
 import UserCenter from '../assets/pages/UserCenter';
+import UserInfo from '../assets/pages/UserInfo';
 import VNPayReturn from '../assets/pages/VNPayReturn';
 import { ROUTES } from '../constants/routes';
 
@@ -79,6 +82,10 @@ const router = createBrowserRouter([
         element: <UserCenter />,
       },
       {
+        path: "user-info",
+        element: <UserInfo />,
+      },
+      {
         path: "about",
         element: <AboutPage />,
       },
@@ -133,6 +140,14 @@ const router = createBrowserRouter([
       {
         path: "vnpay-return",
         element: <VNPayReturn />,
+      },
+      {
+        path: "order-history",
+        element: <OrderHistory />,
+      },
+      {
+        path: "order-detail/:orderId",
+        element: <OrderDetail />,
       },
     ],
   },

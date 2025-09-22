@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import { useAppNavigation } from '../../hooks/useAppNavigation';
 import AccountSettings from './AccountSettings';
+import BecomeSellerWizard from './BecomeSellerWizard';
 import CertificationTab from './CertificationTab';
 import DisputeManagement from './DisputeManagement';
 import OrderHistory from './OrderHistory';
 import RefundManagement from './RefundManagement';
 import SecurityTab from './SecurityTab';
+import SellerDashboard from './SellerDashboard';
+import UserInfo from './UserInfo';
 
 
 const SIDEBAR_ITEMS = [
@@ -26,6 +30,7 @@ const SIDEBAR_ITEMS = [
   { key: 'announcement', label: 'Announcement', icon: '📢' },
   { key: 'coupon', label: 'Coupon', icon: '🎟️' },
   { key: 'affiliate', label: 'Affiliate Program', icon: '🤝' },
+  { key: 'user-info', label: 'User Information', icon: '👤' },
   {
     key: 'settings', label: 'Settings', icon: '⚙️',
     children: [
@@ -38,11 +43,23 @@ const SIDEBAR_ITEMS = [
 ];
 
 const UserCenter: React.FC = () => {
-  const { logout, auth } = useUser();
+  const { logout, auth, user } = useUser();
   const [activeMain, setActiveMain] = useState('buy');
   const [activeSetting, setActiveSetting] = useState('account');
   const [activeBuy, setActiveBuy] = useState('orders');
   const { goToLogin } = useAppNavigation();
+  const location = useLocation();
+
+  // Handle navigation state to directly show KYC settings
+  useEffect(() => {
+    const state = location.state as { activeTab?: string; activeSection?: string } | null;
+    if (state?.activeTab === 'settings') {
+      setActiveMain('settings');
+      if (state?.activeSection === 'cert') {
+        setActiveSetting('cert');
+      }
+    }
+  }, [location.state]);
 
   if (auth == null) {
     goToLogin();
@@ -79,6 +96,33 @@ const UserCenter: React.FC = () => {
         default:
           return <OrderHistory />;
       }
+    }
+    
+    // Seller section content
+    if (activeMain === 'seller') {
+      // Check if user is seller or has completed KYC
+      const isSeller = user?.isSeller || false;
+      const hasKyc = false; // Based on your data, user.isKyc is not available in current response
+      
+      if (!isSeller && !hasKyc) {
+        // Show "Become Seller" wizard for non-sellers without KYC
+        return <BecomeSellerWizard />;
+      } else if (isSeller) {
+        // Show seller dashboard for existing sellers
+        return <SellerDashboard />;
+      } else {
+        // User has KYC but not seller yet
+        return (
+          <div className="max-w-xl mx-auto bg-white rounded-xl shadow p-8 text-gray-400 text-center text-lg">
+            Seller Registration - Đang phát triển
+          </div>
+        );
+      }
+    }
+    
+    // User Info section content
+    if (activeMain === 'user-info') {
+      return <UserInfo />;
     }
     
     // Settings section content
