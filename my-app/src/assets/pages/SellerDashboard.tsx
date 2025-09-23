@@ -9,12 +9,13 @@ import UploadProofModal from '../../components/UploadProofModal/UploadProofModal
 import { useUser } from '../../context/UserContext';
 import { deleteProduct, deleteProductVariant, getProductsBySeller, getVariantsByProduct } from '../../services/productApi';
 import {
-    getAnalyticsOverview,
-    getCustomerAnalytics,
-    getOrdersBySeller,
-    getRevenueChartData,
-    getTopProducts
+  getAnalyticsOverview,
+  getCustomerAnalytics,
+  getOrdersBySeller,
+  getRevenueChartData,
+  getTopProducts
 } from '../../services/transactionApi';
+import SellerRefundManagement from './SellerRefundManagement';
 
 type ProductDto = ProductComponents['schemas']['ProductDto'];
 type ProductVariantDto = ProductComponents['schemas']['ProductVariantDto'];
@@ -33,6 +34,8 @@ interface DashboardStats {
   pendingOrders: number;
   completedOrders: number;
   cancelledOrders: number;
+  totalRefunds: number;
+  pendingRefunds: number;
 }
 
 // Utility function for currency formatting
@@ -73,18 +76,23 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: string; 
   </div>
 );
 
-const TabButton: React.FC<{ label: string; active: boolean; onClick: () => void }> = ({
-  label, active, onClick
+const TabButton: React.FC<{ label: string; active: boolean; onClick: () => void; badge?: number }> = ({
+  label, active, onClick, badge
 }) => (
   <button
     onClick={onClick}
-    className={`px-4 py-2 font-medium rounded-lg transition-colors ${
+    className={`px-4 py-2 font-medium rounded-lg transition-colors relative ${
       active 
         ? 'bg-blue-600 text-white' 
         : 'text-gray-600 hover:text-blue-600 hover:bg-blue-50'
     }`}
   >
     {label}
+    {badge !== undefined && badge > 0 && (
+      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+        {badge > 99 ? '99+' : badge}
+      </span>
+    )}
   </button>
 );
 
@@ -97,6 +105,8 @@ const SellerDashboard: React.FC = () => {
     pendingOrders: 0,
     completedOrders: 0,
     cancelledOrders: 0,
+    totalRefunds: 0,
+    pendingRefunds: 0,
   });
   const [recentProducts, setRecentProducts] = useState<ProductDto[]>([]);
   const [allProducts, setAllProducts] = useState<ProductDto[]>([]);
@@ -118,7 +128,7 @@ const SellerDashboard: React.FC = () => {
   const [ordersLoading, setOrdersLoading] = useState(false);
   const [ordersDataLoaded, setOrdersDataLoaded] = useState(false); // Flag để biết đã load data chưa
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'analytics'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'refunds' | 'analytics'>('overview');
   const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
   const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<ProductDto | null>(null);
@@ -187,6 +197,8 @@ const SellerDashboard: React.FC = () => {
         pendingOrders: orderStatusCounts['PAID'] || 0, // Đơn cần gửi hàng
         completedOrders: (orderStatusCounts['DELIVERED'] || 0) + (orderStatusCounts['COMPLETED'] || 0),
         cancelledOrders: 0, // Không hiển thị đơn hủy nữa
+        totalRefunds: 5, // Mock data - sẽ thay bằng API thực
+        pendingRefunds: 2, // Mock data - sẽ thay bằng API thực
       });
 
       setRecentProducts(productsData.products.slice(0, 5));
@@ -628,6 +640,12 @@ const SellerDashboard: React.FC = () => {
           onClick={() => setActiveTab('orders')} 
         />
         <TabButton 
+          label="Hoàn tiền" 
+          active={activeTab === 'refunds'} 
+          onClick={() => setActiveTab('refunds')}
+          badge={stats.pendingRefunds}
+        />
+        <TabButton 
           label="Phân tích" 
           active={activeTab === 'analytics'} 
           onClick={() => setActiveTab('analytics')} 
@@ -638,7 +656,7 @@ const SellerDashboard: React.FC = () => {
       {activeTab === 'overview' && (
         <div className="space-y-6">
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
             <StatCard
               title="Tổng sản phẩm"
               value={stats.totalProducts}
@@ -668,6 +686,12 @@ const SellerDashboard: React.FC = () => {
               value={stats.completedOrders}
               icon="✅"
               color="bg-green-100"
+            />
+            <StatCard
+              title="Yêu cầu hoàn tiền"
+              value={stats.pendingRefunds}
+              icon="🔄"
+              color="bg-red-100"
             />
           </div>
 
@@ -734,6 +758,66 @@ const SellerDashboard: React.FC = () => {
                 ) : (
                   <p className="text-gray-500 text-center py-8">Chưa có đơn hàng nào</p>
                 )}
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Thao tác nhanh</h3>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button
+                  onClick={() => setActiveTab('products')}
+                  className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <span className="text-xl">📦</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">Quản lý sản phẩm</h4>
+                      <p className="text-sm text-gray-500">Thêm, sửa, xóa sản phẩm</p>
+                    </div>
+                  </div>
+                </button>
+                
+                <button
+                  onClick={() => setActiveTab('orders')}
+                  className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                      <span className="text-xl">🛒</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">Xử lý đơn hàng</h4>
+                      <p className="text-sm text-gray-500">Quản lý và gửi hàng</p>
+                    </div>
+                  </div>
+                </button>
+                
+                <button
+                  onClick={() => setActiveTab('refunds')}
+                  className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left relative"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                      <span className="text-xl">🔄</span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">Yêu cầu hoàn tiền</h4>
+                      <p className="text-sm text-gray-500">Xử lý hoàn tiền từ buyers</p>
+                    </div>
+                  </div>
+                  {stats.pendingRefunds > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {stats.pendingRefunds}
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
           </div>
@@ -1101,6 +1185,10 @@ const SellerDashboard: React.FC = () => {
             )}
           </div>
         </div>
+      )}
+
+      {activeTab === 'refunds' && (
+        <SellerRefundManagement />
       )}
 
       {activeTab === 'analytics' && (

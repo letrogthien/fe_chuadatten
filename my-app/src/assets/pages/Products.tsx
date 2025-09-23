@@ -192,11 +192,11 @@ const Products: React.FC = () => {
             <button
               key={product.id}
               type="button"
-              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow cursor-pointer w-full text-left"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow cursor-pointer w-full text-left h-[400px] flex flex-col"
               onClick={() => navigate(`/product/${product.id}`)}
             >
-              {/* Product Image */}
-              <div className="aspect-square bg-gray-100 relative">
+              {/* Product Image - Fixed height */}
+              <div className="h-48 bg-gray-100 relative flex-shrink-0">
                 {getPrimaryImage(product) ? (
                   <img
                     src={getPrimaryImage(product)}
@@ -228,45 +228,64 @@ const Products: React.FC = () => {
                 )}
               </div>
 
-              {/* Product Info */}
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
-                  {product.name || 'Không có tên'}
-                </h3>
-                
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                  {product.description || 'Không có mô tả'}
-                </p>
+              {/* Product Info - Fixed height with proper spacing */}
+              <div className="p-4 flex-1 flex flex-col justify-between">
+                <div className="flex-1">
+                  {/* Product Name - Fixed height with text clipping */}
+                  <h3 className="font-semibold text-gray-900 mb-2 h-12 overflow-hidden">
+                    <span className="line-clamp-2 text-sm leading-6">
+                      {product.name || 'Không có tên'}
+                    </span>
+                  </h3>
+                  
+                  {/* Description - Fixed height with text clipping */}
+                  <div className="h-10 mb-3 overflow-hidden">
+                    <p className="text-gray-600 text-xs line-clamp-2 leading-5">
+                      {product.description || 'Không có mô tả'}
+                    </p>
+                  </div>
 
-                {/* Price */}
-                <div className="mb-3">
-                  <span className="text-lg font-bold text-green-600">
-                    {formatPrice(product.basePrice)}
-                  </span>
-                  <span className="text-xs text-gray-500 ml-1">
-                    {product.currency || 'VND'}
-                  </span>
-                </div>
-
-                {/* Rating */}
-                {product.ratingAvg && product.ratingCount && (
-                  <div className="flex items-center mb-3">
-                    <div className="flex items-center">
-                      <span className="text-yellow-400">⭐</span>
-                      <span className="text-sm font-medium ml-1">
-                        {product.ratingAvg.toFixed(1)}
-                      </span>
-                    </div>
-                    <span className="text-xs text-gray-500 ml-2">
-                      ({product.ratingCount} đánh giá)
+                  {/* Price - Always same height */}
+                  <div className="mb-3 h-6 flex items-center">
+                    <span className="text-lg font-bold text-green-600 truncate">
+                      {formatPrice(product.basePrice)}
+                    </span>
+                    <span className="text-xs text-gray-500 ml-1 flex-shrink-0">
+                      {product.currency || 'VND'}
                     </span>
                   </div>
-                )}
+                </div>
 
-                {/* Additional Info */}
-                <div className="flex justify-between items-center text-xs text-gray-500">
-                  <span>ID: {product.id ? product.id.slice(0, 8) : 'N/A'}</span>
-                  <span>{product.tags?.join(', ') || 'Không có tag'}</span>
+                {/* Bottom section - Fixed height */}
+                <div className="space-y-2">
+                  {/* Rating - Fixed height whether exists or not */}
+                  <div className="h-5 flex items-center">
+                    {product.ratingAvg && product.ratingCount ? (
+                      <div className="flex items-center">
+                        <div className="flex items-center">
+                          <span className="text-yellow-400 text-sm">⭐</span>
+                          <span className="text-sm font-medium ml-1">
+                            {product.ratingAvg.toFixed(1)}
+                          </span>
+                        </div>
+                        <span className="text-xs text-gray-500 ml-2 truncate">
+                          ({product.ratingCount} đánh giá)
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-gray-400">Chưa có đánh giá</span>
+                    )}
+                  </div>
+
+                  {/* Additional Info - Fixed height */}
+                  <div className="h-4 flex justify-between items-center text-xs text-gray-500">
+                    <span className="truncate flex-1 mr-2">
+                      ID: {product.id ? product.id.slice(0, 8) : 'N/A'}
+                    </span>
+                    <span className="truncate flex-1 text-right">
+                      {product.tags?.length ? product.tags.slice(0, 2).join(', ') : 'Không có tag'}
+                    </span>
+                  </div>
                 </div>
               </div>
             </button>

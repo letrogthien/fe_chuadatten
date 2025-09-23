@@ -13,6 +13,8 @@ export class WebSocketService {
     private maxReconnectAttempts = 5;
     private reconnectDelay = 1000; // 1 second
     private baseUrl: string;
+    private shouldReconnect = false; // Add flag to control reconnection
+    private authenticationFailed = false; // Flag to track auth failures
 
     constructor(baseUrl: string = 'https://notify.wezd.io.vn/') {
         this.baseUrl = baseUrl;
@@ -37,6 +39,9 @@ export class WebSocketService {
     connect(): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
+                // Reset auth failure flag when manually connecting
+                this.authenticationFailed = false;
+                
                 this.client = new Client({
                     webSocketFactory: () => {
                         console.log('🏭 Creating SockJS connection to:', `${this.baseUrl}ws`);
@@ -63,6 +68,8 @@ export class WebSocketService {
                     console.log('🔑 Connection headers sent:', frame.headers);
                     this.connected = true;
                     this.reconnectAttempts = 0;
+                    this.authenticationFailed = false;
+                    this.shouldReconnect = true; // Enable reconnect after successful connection
                     resolve();
                 };
 
@@ -70,7 +77,17 @@ export class WebSocketService {
                     console.error('❌ STOMP error:', frame);
                     console.error('📄 Error frame headers:', frame.headers);
                     this.connected = false;
+                    
+                    // Check if error is related to authentication
                     const errorMessage = frame.headers?.message || 'STOMP connection error';
+                    if (errorMessage.includes('Access token not found') || 
+                        errorMessage.includes('Authentication') || 
+                        errorMessage.includes('Unauthorized')) {
+                        console.log('🚫 Authentication failed - disabling auto-reconnect');
+                        this.authenticationFailed = true;
+                        this.shouldReconnect = false;
+                    }
+                    
                     reject(new Error(`STOMP error: ${errorMessage}`));
                 };
 
@@ -83,7 +100,7 @@ export class WebSocketService {
                 this.client.onWebSocketError = (error: any) => {
                     console.error('💥 WebSocket error:', error);
                     this.connected = false;
-                    reject(error);
+                    reject(new Error(error?.message || 'WebSocket error'));
                 };
 
                 // Activate the client
@@ -92,7 +109,7 @@ export class WebSocketService {
 
             } catch (error) {
                 console.error('❌ Failed to create WebSocket connection:', error);
-                reject(error);
+                reject(new Error(error instanceof Error ? error.message : 'Connection failed'));
             }
         });
     }
@@ -101,21 +118,49 @@ export class WebSocketService {
         if (this.client && this.connected) {
             this.client.deactivate();
             this.connected = false;
+            this.shouldReconnect = false; // Disable reconnect when manually disconnecting
             console.log('WebSocket disconnected');
         }
     }
 
     private handleReconnect(): void {
+        // Only reconnect if:
+        // 1. Reconnect is enabled (shouldReconnect = true)
+        // 2. Authentication didn't fail
+        // 3. Haven't exceeded max attempts
+        if (!this.shouldReconnect || this.authenticationFailed) {
+            console.log('🚫 Auto-reconnect disabled (shouldReconnect:', this.shouldReconnect, ', authFailed:', this.authenticationFailed, ')');
+            return;
+        }
+
         if (this.reconnectAttempts < this.maxReconnectAttempts) {
             this.reconnectAttempts++;
-            console.log(`Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+            console.log(`🔄 Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
             
             setTimeout(() => {
-                this.connect();
+                this.connect().catch(error => {
+                    console.error('Reconnection failed:', error);
+                });
             }, this.reconnectDelay * this.reconnectAttempts);
         } else {
-            console.error('Max reconnection attempts reached');
+            console.error('❌ Max reconnection attempts reached');
+            this.shouldReconnect = false;
         }
+    }
+
+    // Method to enable reconnection (called when user authenticates)
+    enableReconnect(): void {
+        console.log('✅ Enabling WebSocket auto-reconnect');
+        this.shouldReconnect = true;
+        this.authenticationFailed = false;
+        this.reconnectAttempts = 0;
+    }
+
+    // Method to disable reconnection (called when auth fails)
+    disableReconnect(): void {
+        console.log('🚫 Disabling WebSocket auto-reconnect');
+        this.shouldReconnect = false;
+        this.authenticationFailed = true;
     }
 
     subscribeToUserNotifications(
@@ -234,9 +279,7 @@ export class WebSocketService {
 let webSocketService: WebSocketService | null = null;
 
 export const getWebSocketService = (baseUrl?: string): WebSocketService => {
-    if (!webSocketService) {
-        webSocketService = new WebSocketService(baseUrl);
-    }
+    webSocketService ??= new WebSocketService(baseUrl);
     return webSocketService;
 };
 

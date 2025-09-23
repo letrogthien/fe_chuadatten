@@ -101,7 +101,7 @@ const OrderHistory: React.FC = () => {
       while (hasMorePages) {
         const ordersResponse = await transactionApi.getOrdersByBuyer(buyerId, {
           page: currentPage,
-          limit: 10
+          limit: 1000
         });
         
         console.log(`Loaded page ${currentPage + 1}: ${ordersResponse.orders.length} orders`);

@@ -8,6 +8,8 @@ interface WebSocketContextType {
     connectionError: string | null;
     reconnect: () => void;
     forceConnect: () => void;
+    enableReconnect: () => void;
+    disableReconnect: () => void;
 }
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined);
@@ -52,7 +54,18 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 
     const forceConnect = () => {
         console.log('🔄 Force connect triggered (user logged in)...');
+        webSocketService.enableReconnect(); // Enable reconnect when forcing connection
         connectWebSocket();
+    };
+
+    const enableReconnect = () => {
+        console.log('✅ Enabling WebSocket reconnect...');
+        webSocketService.enableReconnect();
+    };
+
+    const disableReconnect = () => {
+        console.log('🚫 Disabling WebSocket reconnect...');
+        webSocketService.disableReconnect();
     };
 
     useEffect(() => {
@@ -87,7 +100,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
         connectionError,
         reconnect,
         forceConnect,
-    }), [webSocketService, isConnected, connectionError, reconnect, forceConnect]);
+        enableReconnect,
+        disableReconnect,
+    }), [webSocketService, isConnected, connectionError, reconnect, forceConnect, enableReconnect, disableReconnect]);
 
     return (
         <WebSocketContext.Provider value={value}>

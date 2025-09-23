@@ -5,12 +5,8 @@ const Footer = () => {
         <footer>
             <div className="w-full bg-cover rounded-b-3xl overflow-hidden shadow-xl ">
                 <div className="footerPaymentLogoBar flex flex-wrap justify-center items-center mb-8 border-b border-gray-700 pb-6 gap-4">
-                    <div className="colBox flex justify-center items-center p-2 "><img src="https://placehold.co/80x24/ffffff/000000?text=Visa" alt="Visa" /></div>
-                    <div className="colBox flex justify-center items-center p-2"><img src="https://placehold.co/80x24/ffffff/000000?text=MasterCard" alt="MasterCard" /></div>
-                    <div className="colBox flex justify-center items-center p-2"><img src="https://placehold.co/80x24/ffffff/000000?text=PayPal" alt="PayPal" /></div>
-                    <div className="colBox flex justify-center items-center p-2"><img src="https://placehold.co/80x24/ffffff/000000?text=Skrill" alt="Skrill" /></div>
-                    <div className="colBox flex justify-center items-center p-2"><img src="https://placehold.co/80x24/ffffff/000000?text=Neteller" alt="Neteller" /></div>
-                    <div className="colBox flex justify-center items-center p-2"><img src="https://placehold.co/80x24/ffffff/000000?text=UnionPay" alt="UnionPay" /></div>
+                    <div className="colBox flex justify-center items-center p-2 ">VnPay</div>
+
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 mr-10 ml-20">

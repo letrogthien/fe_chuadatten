@@ -25,7 +25,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [error, setError] = useState<string | null>(null);
     
     // Get WebSocket context to trigger reconnect
-    const { forceConnect, webSocketService } = useWebSocket();
+    const { forceConnect, webSocketService, disableReconnect, enableReconnect } = useWebSocket();
     
     // Flag to prevent multiple simultaneous /me calls
     const [isFetchingMe, setIsFetchingMe] = useState(false);
@@ -33,10 +33,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Helper function to trigger WebSocket reconnect after successful /me call
     const triggerWebSocketReconnect = React.useCallback(() => {
         console.log('✅ /me API successful - connecting WebSocket...');
+        enableReconnect(); // Enable auto-reconnect since auth is successful
         setTimeout(() => {
             forceConnect();
         }, 500); // Small delay to ensure cookie is set
-    }, [forceConnect]);
+    }, [forceConnect, enableReconnect]);
 
     // ...existing code...
 
@@ -76,6 +77,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 } catch (refreshError) {
                     console.error('Refresh also failed:', refreshError);
                     // Clear session if both /me and refresh fail
+                    disableReconnect(); // Disable auto-reconnect when auth fails
                     clearSession();
                 }
             } finally {
@@ -120,6 +122,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setError(typeof apiError === 'string' ? apiError : JSON.stringify(apiError));
             setUser(null);
             setIsAuthenticated(false);
+            disableReconnect(); // Disable auto-reconnect when login fails
         } finally {
             setLoading(false);
             setIsFetchingMe(false);
@@ -175,6 +178,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 setUser(null);
             }
         } catch {
+            disableReconnect(); // Disable auto-reconnect when refresh fails
             clearSession();
 
         } finally {

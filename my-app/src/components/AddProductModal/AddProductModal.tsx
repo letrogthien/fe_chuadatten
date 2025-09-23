@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import type { components } from '../../api-types/productService';
-import { createProduct, createProductVariant, getCategoriesByParent, getRootCategories } from '../../services/productApi';
+import { createProduct, createProductVariant, getCategoriesByParent, getRootCategories, uploadProductImages } from '../../services/productApi';
 
 type ProductCreateRq = components['schemas']['ProductCreateRq'];
 type VariantCreateRq = components['schemas']['VariantCreateRq'];
@@ -18,6 +18,7 @@ interface ProductFormData {
   categoryIds: string[];
   basePrice: number;
   tags: string[];
+  images: File[];
 }
 
 interface VariantFormData {
@@ -37,6 +38,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
     categoryIds: [],
     basePrice: 0,
     tags: [],
+    images: [],
   });
   
   const [variantData, setVariantData] = useState<VariantFormData>({
@@ -49,7 +51,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [tagsInput, setTagsInput] = useState('');
   const [categoryInput, setCategoryInput] = useState('');
-  const [attributesInput, setAttributesInput] = useState<Record<string, string>>({});
+  const [imagePreview, setImagePreview] = useState<string[]>([]);
   const [categories, setCategories] = useState<CategoryDto[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
@@ -61,6 +63,13 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
       loadRootCategories();
     }
   }, [isOpen]);
+
+  // Cleanup image previews on unmount
+  useEffect(() => {
+    return () => {
+      imagePreview.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [imagePreview]);
 
   const loadRootCategories = async () => {
     try {
@@ -189,6 +198,22 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
       const createdProduct = await createProduct(productCreateData);
       
       if (createdProduct?.id) {
+        // Upload images if any (with first image as primary)
+        if (productData.images.length > 0) {
+          try {
+            const imageOptions = productData.images.map((_, index) => ({
+              alt: `${productData.name} - Image ${index + 1}`,
+              main: index === 0, // First image is primary
+              position: index
+            }));
+            
+            await uploadProductImages(createdProduct.id, productData.images, imageOptions);
+          } catch (imageError) {
+            console.error('Error uploading images:', imageError);
+            // Don't fail the entire operation if image upload fails
+          }
+        }
+
         // Create variant if we have additional variant data
         if (variantData.sku) {
           const variantCreateData: VariantCreateRq = {
@@ -222,6 +247,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
       categoryIds: [],
       basePrice: 0,
       tags: [],
+      images: [],
     });
     setVariantData({
       sku: '',
@@ -234,7 +260,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
     setSelectedCategoryIds([]);
     setExpandedCategories(new Set());
     setCategoryChildren({});
-    setAttributesInput({});
+    setImagePreview([]);
     setErrors({});
     setCurrentStep(1);
   };
@@ -258,6 +284,39 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const validFiles = files.filter(file => {
+      const isValidType = file.type.startsWith('image/');
+      const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB limit
+      return isValidType && isValidSize;
+    });
+
+    if (validFiles.length !== files.length) {
+      setErrors(prev => ({ ...prev, images: 'Một số file không hợp lệ (chỉ chấp nhận ảnh dưới 5MB)' }));
+    } else {
+      setErrors(prev => ({ ...prev, images: '' }));
+    }
+
+    // Update product data with new images
+    setProductData(prev => ({ ...prev, images: [...prev.images, ...validFiles] }));
+
+    // Create preview URLs
+    const newPreviews = validFiles.map(file => URL.createObjectURL(file));
+    setImagePreview(prev => [...prev, ...newPreviews]);
+  };
+
+  const removeImage = (index: number) => {
+    setProductData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }));
+    
+    // Revoke object URL to prevent memory leaks
+    URL.revokeObjectURL(imagePreview[index]);
+    setImagePreview(prev => prev.filter((_, i) => i !== index));
   };
 
   const renderCategoryTree = (categoryList: CategoryDto[], level: number = 0): React.ReactNode => {
@@ -489,6 +548,65 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isOpen, onClose, onSu
                   placeholder="Nhập tags, ngăn cách bởi dấu phẩy (VD: điện tử, smartphone)"
                 />
                 <p className="text-gray-500 text-sm mt-1">Nhập các tag, ngăn cách bởi dấu phẩy</p>
+              </div>
+
+              {/* Image Upload */}
+              <div>
+                <label htmlFor="images" className="block text-sm font-medium text-gray-700 mb-2">
+                  Hình ảnh sản phẩm
+                </label>
+                <div className="space-y-4">
+                  {/* Upload Area */}
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                    <input
+                      id="images"
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                    <label 
+                      htmlFor="images" 
+                      className="cursor-pointer flex flex-col items-center space-y-2"
+                    >
+                      <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      <div className="text-sm">
+                        <span className="font-medium text-blue-600">Chọn file</span>
+                        <span className="text-gray-500"> hoặc kéo thả vào đây</span>
+                      </div>
+                      <p className="text-xs text-gray-500">PNG, JPG, GIF tối đa 5MB mỗi file</p>
+                    </label>
+                  </div>
+
+                  {/* Image Preview */}
+                  {imagePreview.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {imagePreview.map((preview, index) => (
+                        <div key={`preview-${preview}-${index}`} className="relative group">
+                          <img
+                            src={preview}
+                            alt={`Preview ${index + 1}`}
+                            className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeImage(index)}
+                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {errors.images && (
+                    <p className="text-red-500 text-sm">{errors.images}</p>
+                  )}
+                </div>
               </div>
             </>
           )}

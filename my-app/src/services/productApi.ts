@@ -7,6 +7,7 @@ type ApiResponseListProductVariantDto = components["schemas"]["ApiResponseListPr
 type ApiResponseProductVariantDto = components["schemas"]["ApiResponseProductVariantDto"];
 type ApiResponseListCategoryDto = components["schemas"]["ApiResponseListCategoryDto"];
 type ProductDto = components["schemas"]["ProductDto"];
+type ProductImageDto = components["schemas"]["ProductImageDto"];
 type ProductVariantDto = components["schemas"]["ProductVariantDto"];
 type ProductCreateRq = components["schemas"]["ProductCreateRq"];
 type VariantCreateRq = components["schemas"]["VariantCreateRq"];
@@ -358,6 +359,83 @@ export const deleteProductVariant = async (variantId: string): Promise<boolean> 
     return true;
   } catch (error) {
     console.error('Error deleting product variant:', error);
+    throw error;
+  }
+};
+
+/**
+ * Upload images for a product (uploads one by one as API only accepts single file)
+ */
+export const uploadProductImages = async (
+  productId: string, 
+  images: File[],
+  options?: {
+    alt?: string;
+    main?: boolean;
+    position?: number;
+  }[]
+): Promise<ProductDto | null> => {
+  try {
+    let updatedProduct: ProductDto | null = null;
+    
+    // Upload images one by one since API only accepts single file
+    for (let i = 0; i < images.length; i++) {
+      const image = images[i];
+      const option = options?.[i] || {};
+      
+      const formData = new FormData();
+      formData.append('file', image);
+
+      const params = new URLSearchParams();
+      if (option.alt) params.append('alt', option.alt);
+      if (option.main !== undefined) params.append('main', option.main.toString());
+      if (option.position !== undefined) params.append('position', option.position.toString());
+
+      const response = await apiClientProduct.post<ApiResponseProductDto>(
+        `/api/v1/product-service/products/${productId}/images?${params.toString()}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      updatedProduct = response.data.data || null;
+    }
+
+    return updatedProduct;
+  } catch (error) {
+    console.error('Error uploading product images:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get product images (images are included in ProductDto, so this just gets the product)
+ */
+export const getProductImages = async (productId: string): Promise<ProductImageDto[]> => {
+  try {
+    const product = await getProductById(productId);
+    return product?.images || [];
+  } catch (error) {
+    console.error('Error fetching product images:', error);
+    return [];
+  }
+};
+
+/**
+ * Delete product image (Note: API specification doesn't show delete endpoint for individual images)
+ * This function may need to be implemented when the endpoint is available
+ */
+export const deleteProductImage = async (productId: string, imageId: string): Promise<boolean> => {
+  try {
+    // Note: This endpoint may not exist in current API spec
+    // You may need to implement this on backend first
+    await apiClientProduct.delete(`/api/v1/product-service/products/${productId}/images/${imageId}`);
+    return true;
+  } catch (error) {
+    console.error('Error deleting product image:', error);
     throw error;
   }
 };

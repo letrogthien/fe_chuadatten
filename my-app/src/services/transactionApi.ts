@@ -6,6 +6,12 @@ type OrderDto = components['schemas']['OrderDto'];
 type ApiResponseOrderDto = components['schemas']['ApiResponseOrderDto'];
 type ApiResponsePageOrderDto = components['schemas']['ApiResponsePageOrderDto'];
 
+// Refund Types
+type OrderRefundDto = components['schemas']['OrderRefundDto'];
+type OrderRefundCreateRq = components['schemas']['OrderRefundCreateRq'];
+type ApiResponseOrderRefundDto = components['schemas']['ApiResponseOrderRefundDto'];
+type ApiResponsePageOrderRefundDto = components['schemas']['ApiResponsePageOrderRefundDto'];
+
 // Analytics Types
 type AnalyticsOverviewDTO = components['schemas']['AnalyticsOverviewDTO'];
 type ApiResponseAnalyticsOverviewDTO = components['schemas']['ApiResponseAnalyticsOverviewDTO'];
@@ -292,3 +298,338 @@ export const getCustomerAnalytics = async (sellerId: string, period?: number): P
     
     return response.data.data;
 };
+
+// ========== REFUND ENDPOINTS ==========
+
+/**
+ * Get refunds by buyer with pagination support
+ */
+export const getRefundsByBuyer = async (options?: {
+    status?: string;
+    page?: number;
+    limit?: number;
+}): Promise<{
+    refunds: OrderRefundDto[];
+    totalElements: number;
+    totalPages: number;
+    currentPage: number;
+    pageSize: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+}> => {
+    const params = new URLSearchParams({
+        ...(options?.status && { status: options.status }),
+        ...(options?.page !== undefined && { page: options.page.toString() }),
+        ...(options?.limit !== undefined && { limit: options.limit.toString() })
+    });
+
+    const response = await apiClient.get<ApiResponsePageOrderRefundDto>(
+        `/api/v1/transaction-service/refunds/buyer?${params.toString()}`
+    );
+    
+    // Handle paginated response structure
+    const pageData = response.data?.data;
+    const refunds = pageData?.content || [];
+    
+    return {
+        refunds: Array.isArray(refunds) ? refunds : [],
+        totalElements: pageData?.totalElements || 0,
+        totalPages: pageData?.totalPages || 0,
+        currentPage: pageData?.number || 0,
+        pageSize: pageData?.size || 10,
+        hasNext: !(pageData?.last ?? true),
+        hasPrevious: !(pageData?.first ?? true),
+    };
+};
+
+/**
+ * Create a new refund request
+ */
+export const createRefundRequest = async (refundData: OrderRefundCreateRq): Promise<OrderRefundDto> => {
+    const response = await apiClient.post<ApiResponseOrderRefundDto>(
+        `/api/v1/transaction-service/refunds`,
+        refundData
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to create refund request - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * Get refund status for a specific order
+ */
+export const getRefundByOrderId = async (orderId: string): Promise<OrderRefundDto> => {
+    const response = await apiClient.get<ApiResponseOrderRefundDto>(
+        `/api/v1/transaction-service/refunds/order/${orderId}`
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Refund not found for this order');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * Get all refunds with admin permissions (for admin users)
+ */
+export const getAllRefundsAdmin = async (options?: {
+    status?: string;
+    orderId?: string;
+    buyerId?: string;
+    page?: number;
+    limit?: number;
+}): Promise<{
+    refunds: OrderRefundDto[];
+    totalElements: number;
+    totalPages: number;
+    currentPage: number;
+    pageSize: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+}> => {
+    const params = new URLSearchParams();
+    
+    if (options?.status) params.append('status', options.status);
+    if (options?.orderId) params.append('orderId', options.orderId);
+    if (options?.buyerId) params.append('buyerId', options.buyerId);
+    if (options?.page !== undefined) params.append('page', options.page.toString());
+    if (options?.limit !== undefined) params.append('limit', options.limit.toString());
+
+    const response = await apiClient.get<ApiResponsePageOrderRefundDto>(
+        `/api/v1/transaction-service/admin/refunds?${params.toString()}`
+    );
+    
+    // Handle paginated response structure
+    const pageData = response.data?.data;
+    const refunds = pageData?.content || [];
+    
+    return {
+        refunds: Array.isArray(refunds) ? refunds : [],
+        totalElements: pageData?.totalElements || 0,
+        totalPages: pageData?.totalPages || 0,
+        currentPage: pageData?.number || 0,
+        pageSize: pageData?.size || 10,
+        hasNext: !(pageData?.last ?? true),
+        hasPrevious: !(pageData?.first ?? true),
+    };
+};
+
+// ========== SELLER REFUND MANAGEMENT ==========
+
+/**
+ * Get refunds by seller with pagination support
+ */
+export const getRefundsBySeller = async (sellerId: string, options?: {
+    status?: string;
+    page?: number;
+    limit?: number;
+}): Promise<{
+    refunds: OrderRefundDto[];
+    totalElements: number;
+    totalPages: number;
+    currentPage: number;
+    pageSize: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+}> => {
+    const params = new URLSearchParams({
+        ...(options?.status && { status: options.status }),
+        ...(options?.page !== undefined && { page: options.page.toString() }),
+        ...(options?.limit !== undefined && { limit: options.limit.toString() })
+    });
+
+    const response = await apiClient.get<ApiResponsePageOrderRefundDto>(
+        `/api/v1/transaction-service/refunds/seller/${sellerId}?${params.toString()}`
+    );
+    
+    const pageData = response.data?.data;
+    const refunds = pageData?.content || [];
+    
+    return {
+        refunds: Array.isArray(refunds) ? refunds : [],
+        totalElements: pageData?.totalElements || 0,
+        totalPages: pageData?.totalPages || 0,
+        currentPage: pageData?.number || 0,
+        pageSize: pageData?.size || 10,
+        hasNext: !(pageData?.last ?? true),
+        hasPrevious: !(pageData?.first ?? true),
+    };
+};
+
+/**
+ * Approve a refund request by seller
+ */
+export const approveRefund = async (refundId: string, sellerId: string, note?: string): Promise<OrderRefundDto> => {
+    const response = await apiClient.put<ApiResponseOrderRefundDto>(
+        `/api/v1/transaction-service/refunds/${refundId}/approve`,
+        { sellerId, note }
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to approve refund - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * Reject a refund request by seller
+ */
+export const rejectRefund = async (refundId: string, sellerId: string, reason: string): Promise<OrderRefundDto> => {
+    const response = await apiClient.put<ApiResponseOrderRefundDto>(
+        `/api/v1/transaction-service/refunds/${refundId}/reject`,
+        { sellerId, reason }
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to reject refund - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * Update refund status
+ */
+export const updateRefundStatus = async (
+    refundId: string, 
+    status: string, 
+    updatedBy: string,
+    note?: string
+): Promise<OrderRefundDto> => {
+    const response = await apiClient.put<ApiResponseOrderRefundDto>(
+        `/api/v1/transaction-service/refunds/${refundId}/status`,
+        { status, updatedBy, note }
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to update refund status - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+// ========== ADMIN REFUND MANAGEMENT ==========
+
+/**
+ * Admin approve refund
+ */
+export const adminApproveRefund = async (refundId: string, note?: string): Promise<OrderRefundDto> => {
+    const params = new URLSearchParams();
+    if (note) {
+        params.append('note', note);
+    }
+    
+    const url = params.toString() 
+        ? `/api/v1/transaction-service/admin/refunds/${refundId}/approve?${params.toString()}`
+        : `/api/v1/transaction-service/admin/refunds/${refundId}/approve`;
+
+    const response = await apiClient.put<ApiResponseOrderRefundDto>(url);
+    
+    if (!response.data.data) {
+        throw new Error('Failed to approve refund - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * Admin reject refund
+ */
+export const adminRejectRefund = async (refundId: string, reason: string): Promise<OrderRefundDto> => {
+    const params = new URLSearchParams({ reason });
+    
+    const response = await apiClient.put<ApiResponseOrderRefundDto>(
+        `/api/v1/transaction-service/admin/refunds/${refundId}/reject?${params.toString()}`
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to reject refund - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * Admin force complete refund
+ */
+export const adminForceCompleteRefund = async (refundId: string, note?: string): Promise<OrderRefundDto> => {
+    const params = new URLSearchParams();
+    if (note) {
+        params.append('note', note);
+    }
+    
+    const url = params.toString() 
+        ? `/api/v1/transaction-service/admin/refunds/${refundId}/force-complete?${params.toString()}`
+        : `/api/v1/transaction-service/admin/refunds/${refundId}/force-complete`;
+
+    const response = await apiClient.put<ApiResponseOrderRefundDto>(url);
+    
+    if (!response.data.data) {
+        throw new Error('Failed to force complete refund - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * Process refund payment (Admin only)
+ */
+export const processRefundPayment = async (
+    refundId: string, 
+    adminId: string, 
+    paymentMethod: string, 
+    note?: string
+): Promise<OrderRefundDto> => {
+    const response = await apiClient.post<ApiResponseOrderRefundDto>(
+        `/api/v1/transaction-service/refunds/${refundId}/process-payment`,
+        { adminId, paymentMethod, note }
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to process refund payment - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+// Default export object với tất cả API functions
+const transactionApi = {
+    // Order APIs
+    createOrder,
+    getOrderById,
+    getOrdersByBuyer,
+    getOrdersBySeller,
+    uploadDeliveryProof,
+    cancelOrder,
+    
+    // Analytics APIs
+    getAnalyticsOverview,
+    getTopProducts,
+    getRevenueChartData,
+    getCustomerAnalytics,
+    
+    // Refund APIs - Buyer
+    getRefundsByBuyer,
+    createRefundRequest,
+    getRefundByOrderId,
+    
+    // Refund APIs - Seller
+    getRefundsBySeller,
+    approveRefund,
+    rejectRefund,
+    updateRefundStatus,
+    
+    // Refund APIs - Admin
+    getAllRefundsAdmin,
+    adminApproveRefund,
+    adminRejectRefund,
+    adminForceCompleteRefund,
+    processRefundPayment,
+};
+
+export default transactionApi;
