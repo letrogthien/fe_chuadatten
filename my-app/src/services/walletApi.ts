@@ -6,6 +6,10 @@ type ApiResponsePaymentDto = components['schemas']['ApiResponsePaymentDto'];
 type ApiResponseString = components['schemas']['ApiResponseString'];
 type VnpayReturnDto = components['schemas']['VnpayReturnDto'];
 type ApiResponseVnpayReturnDto = components['schemas']['ApiResponseVnpayReturnDto'];
+type PaymentAttemptDto = components['schemas']['PaymentAttemptDto'];
+type ApiResponsePaymentAttemptDto = components['schemas']['ApiResponsePaymentAttemptDto'];
+type PagePaymentDto = components['schemas']['PagePaymentDto'];
+type ApiResponsePagePaymentDto = components['schemas']['ApiResponsePagePaymentDto'];
 
 /**
  * Get payment by order ID
@@ -25,12 +29,16 @@ export const getPaymentByOrderId = async (orderId: string): Promise<PaymentDto> 
 /**
  * Get payment status by payment ID
  */
-export const getPaymentStatus = async (paymentId: string): Promise<string> => {
-    const response = await apiClient.get<ApiResponseString>(
+export const getPaymentStatus = async (paymentId: string): Promise<PaymentDto> => {
+    const response = await apiClient.get<ApiResponsePaymentDto>(
         `/api/v1/wallet-service/payments/${paymentId}/status`
     );
     
-    return response.data.data || 'UNKNOWN';
+    if (!response.data.data) {
+        throw new Error('Payment status not found');
+    }
+    
+    return response.data.data;
 };
 
 /**
@@ -51,16 +59,10 @@ export const getPaymentById = async (paymentId: string): Promise<PaymentDto> => 
 /**
  * Cancel payment
  */
-export const cancelPayment = async (paymentId: string): Promise<PaymentDto> => {
-    const response = await apiClient.put<ApiResponsePaymentDto>(
+export const cancelPayment = async (paymentId: string): Promise<void> => {
+    await apiClient.put(
         `/api/v1/wallet-service/payments/${paymentId}/cancel`
     );
-    
-    if (!response.data.data) {
-        throw new Error('Failed to cancel payment');
-    }
-    
-    return response.data.data;
 };
 
 /**
@@ -132,6 +134,92 @@ export const handleVnpayReturn = async (returnParams: URLSearchParams): Promise<
 export const retryPayment = async (paymentId: string): Promise<string> => {
     const response = await apiClient.post<ApiResponseString>(
         `/api/v1/wallet-service/payments/${paymentId}/retry`
+    );
+    
+    return response.data.data || '';
+};
+
+/**
+ * Refund payment
+ */
+export const refundPayment = async (paymentId: string, sellerId: string): Promise<void> => {
+    await apiClient.post(
+        `/api/v1/wallet-service/payments/${paymentId}/refund`,
+        null,
+        {
+            headers: {
+                'Seller-Id': sellerId
+            }
+        }
+    );
+};
+
+/**
+ * Get payment attempts history
+ */
+export const getPaymentAttempts = async (paymentId: string): Promise<PaymentAttemptDto> => {
+    const response = await apiClient.get<ApiResponsePaymentAttemptDto>(
+        `/api/v1/wallet-service/payments/${paymentId}/attempts`
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Payment attempts not found');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * Get user payments with pagination
+ */
+export const getUserPayments = async (options?: {
+    page?: number;
+    size?: number;
+}): Promise<{
+    payments: PaymentDto[];
+    totalElements: number;
+    totalPages: number;
+    currentPage: number;
+    pageSize: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+}> => {
+    const params = new URLSearchParams();
+    
+    if (options?.page !== undefined) params.append('page', options.page.toString());
+    if (options?.size !== undefined) params.append('size', options.size.toString());
+
+    const response = await apiClient.get<ApiResponsePagePaymentDto>(
+        `/api/v1/wallet-service/payments/me?${params.toString()}`
+    );
+    
+    const pageData = response.data?.data;
+    const payments = pageData?.content || [];
+    
+    return {
+        payments: Array.isArray(payments) ? payments : [],
+        totalElements: pageData?.totalElements || 0,
+        totalPages: pageData?.totalPages || 0,
+        currentPage: pageData?.number || 0,
+        pageSize: pageData?.size || 10,
+        hasNext: !(pageData?.last ?? true),
+        hasPrevious: !(pageData?.first ?? true),
+    };
+};
+
+/**
+ * Handle VNPay IPN (Instant Payment Notification) callback
+ */
+export const handleVnpayIpn = async (returnParams: URLSearchParams): Promise<string> => {
+    // Convert URLSearchParams to object for API call
+    const params: Record<string, string> = {};
+    returnParams.forEach((value, key) => {
+        params[key] = value;
+    });
+    
+    const response = await apiClient.get<ApiResponseString>(
+        '/api/v1/wallet-service/payments/IPN',
+        { params }
     );
     
     return response.data.data || '';

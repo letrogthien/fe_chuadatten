@@ -18,6 +18,17 @@ export const ROUTES = {
   ITEMS: '/items',
   ACCOUNTS: '/accounts',
   GIFT_CARDS: '/gift-cards',
+  SEARCH: '/search',
+  // Admin routes
+  ADMIN: '/admin',
+  ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_USERS: '/admin/users',
+  ADMIN_PRODUCTS: '/admin/products',
+  ADMIN_CATEGORIES: '/admin/categories',
+  ADMIN_REFUNDS: '/admin/refunds',
+  ADMIN_ORDERS: '/admin/orders',
+  ADMIN_DISPUTES: '/admin/disputes',
+  ADMIN_ANALYTICS: '/admin/analytics',
 } as const;
 
 // Route labels for navigation
@@ -40,6 +51,17 @@ export const ROUTE_LABELS = {
   [ROUTES.ITEMS]: 'Items',
   [ROUTES.ACCOUNTS]: 'Accounts',
   [ROUTES.GIFT_CARDS]: 'Gift Cards',
+  [ROUTES.SEARCH]: 'Product Search',
+  // Admin route labels
+  [ROUTES.ADMIN]: 'Admin Overview',
+  [ROUTES.ADMIN_DASHBOARD]: 'Admin Dashboard',
+  [ROUTES.ADMIN_USERS]: 'User Management',
+  [ROUTES.ADMIN_PRODUCTS]: 'Product Management',
+  [ROUTES.ADMIN_CATEGORIES]: 'Category Management', 
+  [ROUTES.ADMIN_REFUNDS]: 'Refund Management',
+  [ROUTES.ADMIN_ORDERS]: 'Order Management',
+  [ROUTES.ADMIN_DISPUTES]: 'Dispute Management',
+  [ROUTES.ADMIN_ANALYTICS]: 'Analytics Dashboard',
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;

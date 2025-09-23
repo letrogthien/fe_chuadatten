@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
 import Layout from '../Layout';
 import AboutPage from '../aboutpage/AboutPage';
 import CareersPage from '../aboutpage/CareersPage';
@@ -24,7 +25,20 @@ import Register from '../assets/pages/Register';
 import UserCenter from '../assets/pages/UserCenter';
 import UserInfo from '../assets/pages/UserInfo';
 import VNPayReturn from '../assets/pages/VNPayReturn';
+import AdminLayout from '../components/AdminLayout';
 import { ROUTES } from '../constants/routes';
+
+// Admin Components
+import AdminAnalyticsDashboard from '../assets/pages/AdminAnalyticsDashboard';
+import AdminCategoryManagement from '../assets/pages/AdminCategoryManagement';
+import AdminDashboard from '../assets/pages/AdminDashboard';
+import AdminDisputeManagement from '../assets/pages/AdminDisputeManagement';
+import AdminOverview from '../assets/pages/AdminOverview';
+import AdminProductManagement from '../assets/pages/AdminProductManagement';
+import AdminRefundManagement from '../assets/pages/AdminRefundManagement';
+import AdminUserManagement from '../assets/pages/AdminUserManagement';
+import ProductSearch from '../assets/pages/ProductSearch';
+import RoutesOverview from '../assets/pages/RoutesOverview';
 
 // Error boundary component
 const ErrorPage = () => {
@@ -148,6 +162,54 @@ const router = createBrowserRouter([
       {
         path: "order-detail/:orderId",
         element: <OrderDetail />,
+      },
+      {
+        path: "search",
+        element: <ProductSearch />,
+      },
+      {
+        path: "routes-overview",
+        element: <RoutesOverview />,
+      },
+    ],
+  },
+  // Admin Routes với layout riêng
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        index: true,
+        element: <AdminOverview />,
+      },
+      {
+        path: "dashboard",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "users",
+        element: <AdminUserManagement />,
+      },
+      {
+        path: "products",
+        element: <AdminProductManagement />,
+      },
+      {
+        path: "categories",
+        element: <AdminCategoryManagement />,
+      },
+      {
+        path: "refunds",
+        element: <AdminRefundManagement />,
+      },
+      {
+        path: "analytics",
+        element: <AdminAnalyticsDashboard />,
+      },
+      {
+        path: "disputes",
+        element: <AdminDisputeManagement />,
       },
     ],
   },

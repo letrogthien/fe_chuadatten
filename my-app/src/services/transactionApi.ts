@@ -12,6 +12,13 @@ type OrderRefundCreateRq = components['schemas']['OrderRefundCreateRq'];
 type ApiResponseOrderRefundDto = components['schemas']['ApiResponseOrderRefundDto'];
 type ApiResponsePageOrderRefundDto = components['schemas']['ApiResponsePageOrderRefundDto'];
 
+// Dispute Types
+type OrderDisputeDto = components['schemas']['OrderDisputeDto'];
+type OrderDisputeCreateRq = components['schemas']['OrderDisputeCreateRq'];
+type OrderDisputeUpdateRq = components['schemas']['OrderDisputeUpdateRq'];
+type ApiResponseOrderDisputeDto = components['schemas']['ApiResponseOrderDisputeDto'];
+type ApiResponsePageOrderDisputeDto = components['schemas']['ApiResponsePageOrderDisputeDto'];
+
 // Analytics Types
 type AnalyticsOverviewDTO = components['schemas']['AnalyticsOverviewDTO'];
 type ApiResponseAnalyticsOverviewDTO = components['schemas']['ApiResponseAnalyticsOverviewDTO'];
@@ -21,6 +28,7 @@ type RevenueChartDataDTO = components['schemas']['RevenueChartDataDTO'];
 type ApiResponseListRevenueChartDataDTO = components['schemas']['ApiResponseListRevenueChartDataDTO'];
 type CustomerAnalyticsDTO = components['schemas']['CustomerAnalyticsDTO'];
 type ApiResponseCustomerAnalyticsDTO = components['schemas']['ApiResponseCustomerAnalyticsDTO'];
+type ApiResponseObject = components['schemas']['ApiResponseObject'];
 
 /**
  * Create a new order
@@ -595,6 +603,283 @@ export const processRefundPayment = async (
     }
     
     return response.data.data;
+};
+
+// ========== ADMIN ORDER MANAGEMENT ==========
+
+/**
+ * [ADMIN] Get all orders with admin permissions
+ */
+export const getAllOrdersAdmin = async (options?: {
+    sellerId?: string;
+    buyerId?: string;
+    status?: string;
+    paymentStatus?: string;
+    page?: number;
+    limit?: number;
+}): Promise<{
+    orders: OrderDto[];
+    totalElements: number;
+    totalPages: number;
+    currentPage: number;
+    pageSize: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+}> => {
+    const params = new URLSearchParams();
+    
+    if (options?.sellerId) params.append('sellerId', options.sellerId);
+    if (options?.buyerId) params.append('buyerId', options.buyerId);
+    if (options?.status) params.append('status', options.status);
+    if (options?.paymentStatus) params.append('paymentStatus', options.paymentStatus);
+    if (options?.page !== undefined) params.append('page', options.page.toString());
+    if (options?.limit !== undefined) params.append('limit', options.limit.toString());
+
+    const response = await apiClient.get<ApiResponsePageOrderDto>(
+        `/api/v1/transaction-service/admin/orders?${params.toString()}`
+    );
+    
+    const pageData = response.data?.data;
+    const orders = pageData?.content || [];
+    
+    return {
+        orders: Array.isArray(orders) ? orders : [],
+        totalElements: pageData?.totalElements || 0,
+        totalPages: pageData?.totalPages || 0,
+        currentPage: pageData?.number || 0,
+        pageSize: pageData?.size || 10,
+        hasNext: !(pageData?.last ?? true),
+        hasPrevious: !(pageData?.first ?? true),
+    };
+};
+
+/**
+ * [ADMIN] Get order details with admin permissions
+ */
+export const getOrderDetailsAdmin = async (orderId: string): Promise<OrderDto> => {
+    const response = await apiClient.get<ApiResponseOrderDto>(
+        `/api/v1/transaction-service/admin/orders/${orderId}`
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to get order details - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * [ADMIN] Audit an order
+ */
+export const auditOrder = async (orderId: string, auditFlag: boolean): Promise<OrderDto> => {
+    const params = new URLSearchParams({ auditFlag: auditFlag.toString() });
+    
+    const response = await apiClient.put<ApiResponseOrderDto>(
+        `/api/v1/transaction-service/admin/orders/${orderId}/audit?${params.toString()}`
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to audit order - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+// ========== DISPUTE MANAGEMENT ==========
+
+/**
+ * Get all disputes (public)
+ */
+export const getAllDisputes = async (options?: {
+    status?: string;
+    issueType?: string;
+    page?: number;
+    limit?: number;
+}): Promise<{
+    disputes: OrderDisputeDto[];
+    totalElements: number;
+    totalPages: number;
+    currentPage: number;
+    pageSize: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+}> => {
+    const params = new URLSearchParams();
+    
+    if (options?.status) params.append('status', options.status);
+    if (options?.issueType) params.append('issueType', options.issueType);
+    if (options?.page !== undefined) params.append('page', options.page.toString());
+    if (options?.limit !== undefined) params.append('limit', options.limit.toString());
+
+    const response = await apiClient.get<ApiResponsePageOrderDisputeDto>(
+        `/api/v1/transaction-service/disputes?${params.toString()}`
+    );
+    
+    const pageData = response.data?.data;
+    const disputes = pageData?.content || [];
+    
+    return {
+        disputes: Array.isArray(disputes) ? disputes : [],
+        totalElements: pageData?.totalElements || 0,
+        totalPages: pageData?.totalPages || 0,
+        currentPage: pageData?.number || 0,
+        pageSize: pageData?.size || 10,
+        hasNext: !(pageData?.last ?? true),
+        hasPrevious: !(pageData?.first ?? true),
+    };
+};
+
+/**
+ * Create a new dispute
+ */
+export const createDispute = async (disputeData: OrderDisputeCreateRq): Promise<OrderDisputeDto> => {
+    const response = await apiClient.post<ApiResponseOrderDisputeDto>(
+        `/api/v1/transaction-service/disputes`,
+        disputeData
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to create dispute - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * Update a dispute
+ */
+export const updateDispute = async (disputeId: string, disputeData: OrderDisputeUpdateRq): Promise<OrderDisputeDto> => {
+    const response = await apiClient.put<ApiResponseOrderDisputeDto>(
+        `/api/v1/transaction-service/disputes/${disputeId}`,
+        disputeData
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to update dispute - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+/**
+ * Get dispute by order ID
+ */
+export const getDisputeByOrderId = async (orderId: string): Promise<OrderDisputeDto> => {
+    const response = await apiClient.get<ApiResponseOrderDisputeDto>(
+        `/api/v1/transaction-service/disputes/order/${orderId}`
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to get dispute - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+// ========== ADMIN DISPUTE MANAGEMENT ==========
+
+/**
+ * [ADMIN] Get all disputes with admin permissions
+ */
+export const getAllDisputesAdmin = async (options?: {
+    status?: string;
+    issueType?: string;
+    page?: number;
+    limit?: number;
+}): Promise<{
+    disputes: OrderDisputeDto[];
+    totalElements: number;
+    totalPages: number;
+    currentPage: number;
+    pageSize: number;
+    hasNext: boolean;
+    hasPrevious: boolean;
+}> => {
+    const params = new URLSearchParams();
+    
+    if (options?.status) params.append('status', options.status);
+    if (options?.issueType) params.append('issueType', options.issueType);
+    if (options?.page !== undefined) params.append('page', options.page.toString());
+    if (options?.limit !== undefined) params.append('limit', options.limit.toString());
+
+    const response = await apiClient.get<ApiResponsePageOrderDisputeDto>(
+        `/api/v1/transaction-service/admin/disputes?${params.toString()}`
+    );
+    
+    const pageData = response.data?.data;
+    const disputes = pageData?.content || [];
+    
+    return {
+        disputes: Array.isArray(disputes) ? disputes : [],
+        totalElements: pageData?.totalElements || 0,
+        totalPages: pageData?.totalPages || 0,
+        currentPage: pageData?.number || 0,
+        pageSize: pageData?.size || 10,
+        hasNext: !(pageData?.last ?? true),
+        hasPrevious: !(pageData?.first ?? true),
+    };
+};
+
+/**
+ * [ADMIN] Resolve a dispute
+ */
+export const adminResolveDispute = async (
+    disputeId: string, 
+    status: string, 
+    autoRefund: boolean = false
+): Promise<OrderDisputeDto> => {
+    const params = new URLSearchParams({ 
+        status, 
+        autoRefund: autoRefund.toString() 
+    });
+    
+    const response = await apiClient.post<ApiResponseOrderDisputeDto>(
+        `/api/v1/transaction-service/admin/disputes/${disputeId}/resolve?${params.toString()}`
+    );
+    
+    if (!response.data.data) {
+        throw new Error('Failed to resolve dispute - no data returned');
+    }
+    
+    return response.data.data;
+};
+
+// ========== ADDITIONAL ANALYTICS ==========
+
+/**
+ * Get performance metrics for seller
+ */
+export const getPerformanceMetrics = async (sellerId: string, period?: number): Promise<any> => {
+    const params = new URLSearchParams();
+    if (period) {
+        params.append('period', period.toString());
+    }
+    
+    const baseUrl = `/api/v1/transaction-service/analytics/seller/${sellerId}/performance`;
+    const queryString = params.toString();
+    const url = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+    
+    const response = await apiClient.get<ApiResponseObject>(url);
+    
+    return response.data.data || {};
+};
+
+/**
+ * Get order status distribution for seller
+ */
+export const getOrderStatusDistribution = async (sellerId: string, period?: number): Promise<any> => {
+    const params = new URLSearchParams();
+    if (period) {
+        params.append('period', period.toString());
+    }
+    
+    const baseUrl = `/api/v1/transaction-service/analytics/seller/${sellerId}/order-status`;
+    const queryString = params.toString();
+    const url = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+    
+    const response = await apiClient.get<ApiResponseObject>(url);
+    
+    return response.data.data || {};
 };
 
 // Default export object với tất cả API functions

@@ -6,11 +6,15 @@ type ApiResponseProductDto = components["schemas"]["ApiResponseProductDto"];
 type ApiResponseListProductVariantDto = components["schemas"]["ApiResponseListProductVariantDto"];
 type ApiResponseProductVariantDto = components["schemas"]["ApiResponseProductVariantDto"];
 type ApiResponseListCategoryDto = components["schemas"]["ApiResponseListCategoryDto"];
+type ApiResponseCategoryDto = components["schemas"]["ApiResponseCategoryDto"];
+type ApiResponseVoid = components["schemas"]["ApiResponseVoid"];
 type ProductDto = components["schemas"]["ProductDto"];
 type ProductImageDto = components["schemas"]["ProductImageDto"];
 type ProductVariantDto = components["schemas"]["ProductVariantDto"];
 type ProductCreateRq = components["schemas"]["ProductCreateRq"];
+type ProductUpdateRq = components["schemas"]["ProductUpdateRq"];
 type VariantCreateRq = components["schemas"]["VariantCreateRq"];
+type VariantUpdateRq = components["schemas"]["VariantUpdateRq"];
 type CategoryDto = components["schemas"]["CategoryDto"];
 
 // Type for hot deal response
@@ -437,5 +441,168 @@ export const deleteProductImage = async (productId: string, imageId: string): Pr
   } catch (error) {
     console.error('Error deleting product image:', error);
     throw error;
+  }
+};
+
+// ===============================
+// ADMIN ENDPOINTS
+// ===============================
+
+/**
+ * [ADMIN] Create a new category
+ */
+export const adminCreateCategory = async (categoryData: CategoryDto): Promise<CategoryDto | null> => {
+  try {
+    const response = await apiClientProduct.post<ApiResponseCategoryDto>(
+      '/api/v1/product-service/admin/categories',
+      categoryData
+    );
+    return response.data.data || null;
+  } catch (error) {
+    console.error('Error creating category (admin):', error);
+    throw error;
+  }
+};
+
+/**
+ * [ADMIN] Update a category by ID
+ */
+export const adminUpdateCategory = async (id: string, categoryData: CategoryDto): Promise<CategoryDto | null> => {
+  try {
+    const response = await apiClientProduct.put<ApiResponseCategoryDto>(
+      `/api/v1/product-service/admin/categories/${id}`,
+      categoryData
+    );
+    return response.data.data || null;
+  } catch (error) {
+    console.error('Error updating category (admin):', error);
+    throw error;
+  }
+};
+
+/**
+ * [ADMIN] Delete a category by ID
+ */
+export const adminDeleteCategory = async (id: string): Promise<boolean> => {
+  try {
+    await apiClientProduct.delete<ApiResponseVoid>(
+      `/api/v1/product-service/admin/categories/${id}`
+    );
+    return true;
+  } catch (error) {
+    console.error('Error deleting category (admin):', error);
+    throw error;
+  }
+};
+
+// ===============================
+// INVENTORY MANAGEMENT ENDPOINTS
+// ===============================
+
+/**
+ * Reserve inventory for a product variant
+ */
+export const reserveVariantInventory = async (variantId: string, qty: number): Promise<ProductVariantDto | null> => {
+  try {
+    const response = await apiClientProduct.post<ApiResponseProductVariantDto>(
+      `/api/v1/product-service/product-variants/${variantId}/reserve`,
+      null,
+      {
+        params: { qty }
+      }
+    );
+    return response.data.data || null;
+  } catch (error) {
+    console.error('Error reserving variant inventory:', error);
+    throw error;
+  }
+};
+
+/**
+ * Release reserved inventory for a product variant
+ */
+export const releaseVariantInventory = async (variantId: string, qty: number): Promise<ProductVariantDto | null> => {
+  try {
+    const response = await apiClientProduct.post<ApiResponseProductVariantDto>(
+      `/api/v1/product-service/product-variants/${variantId}/release`,
+      null,
+      {
+        params: { qty }
+      }
+    );
+    return response.data.data || null;
+  } catch (error) {
+    console.error('Error releasing variant inventory:', error);
+    throw error;
+  }
+};
+
+/**
+ * Commit reserved inventory for a product variant (finalize the reservation)
+ */
+export const commitVariantInventory = async (variantId: string, qty: number): Promise<ProductVariantDto | null> => {
+  try {
+    const response = await apiClientProduct.post<ApiResponseProductVariantDto>(
+      `/api/v1/product-service/product-variants/${variantId}/commit`,
+      null,
+      {
+        params: { qty }
+      }
+    );
+    return response.data.data || null;
+  } catch (error) {
+    console.error('Error committing variant inventory:', error);
+    throw error;
+  }
+};
+
+// ===============================
+// ADDITIONAL PRODUCT ENDPOINTS
+// ===============================
+
+/**
+ * Update product using ProductUpdateRq instead of ProductCreateRq
+ */
+export const updateProductAdvanced = async (productId: string, productData: ProductUpdateRq): Promise<ProductDto | null> => {
+  try {
+    const response = await apiClientProduct.put<ApiResponseProductDto>(
+      `/api/v1/product-service/products/${productId}`,
+      productData
+    );
+    return response.data.data || null;
+  } catch (error) {
+    console.error('Error updating product (advanced):', error);
+    throw error;
+  }
+};
+
+/**
+ * Update product variant using VariantUpdateRq
+ */
+export const updateProductVariantAdvanced = async (variantId: string, variantData: VariantUpdateRq): Promise<ProductVariantDto | null> => {
+  try {
+    const response = await apiClientProduct.put<ApiResponseProductVariantDto>(
+      `/api/v1/product-service/product-variants/${variantId}`,
+      variantData
+    );
+    return response.data.data || null;
+  } catch (error) {
+    console.error('Error updating product variant (advanced):', error);
+    throw error;
+  }
+};
+
+/**
+ * Get product variant by ID
+ */
+export const getProductVariantById = async (id: string): Promise<ProductVariantDto | null> => {
+  try {
+    const response = await apiClientProduct.get<ApiResponseProductVariantDto>(
+      `/api/v1/product-service/product-variants/${id}`
+    );
+    return response.data.data || null;
+  } catch (error) {
+    console.error('Error fetching product variant by ID:', error);
+    return null;
   }
 };
