@@ -81,6 +81,18 @@ const AdminLayout: React.FC = () => {
               <span>Người dùng</span>
             </Link>
 
+            {/* KYC Management */}
+            <Link to="/admin/kyc" className={getLinkClass('/admin/kyc')}>
+              <span className="mr-3">🆔</span>
+              <span>KYC & Seller</span>
+            </Link>
+
+            {/* Device Management */}
+            <Link to="/admin/devices" className={getLinkClass('/admin/devices')}>
+              <span className="mr-3">📱</span>
+              <span>Thiết bị</span>
+            </Link>
+
             {/* Product Management */}
             <Link to={ROUTES.ADMIN_PRODUCTS} className={getLinkClass(ROUTES.ADMIN_PRODUCTS)}>
               <span className="mr-3">📦</span>
@@ -120,13 +132,13 @@ const AdminLayout: React.FC = () => {
             </div>
 
             {/* Settings */}
-            <Link to="/admin/settings" className={getLinkClass('/admin/settings')}>
+            <Link to={ROUTES.ADMIN_SETTINGS} className={getLinkClass(ROUTES.ADMIN_SETTINGS)}>
               <span className="mr-3">⚙️</span>
               <span>Cài đặt</span>
             </Link>
 
             {/* Reports */}
-            <Link to="/admin/reports" className={getLinkClass('/admin/reports')}>
+            <Link to={ROUTES.ADMIN_REPORTS} className={getLinkClass(ROUTES.ADMIN_REPORTS)}>
               <span className="mr-3">📈</span>
               <span>Báo cáo</span>
             </Link>

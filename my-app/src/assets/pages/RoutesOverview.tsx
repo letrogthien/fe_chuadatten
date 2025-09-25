@@ -20,8 +20,11 @@ const RoutesOverview: React.FC = () => {
     { path: ROUTES.ADMIN_USERS, label: 'Quản lý người dùng', description: 'Quản lý tài khoản người dùng' },
     { path: ROUTES.ADMIN_PRODUCTS, label: 'Quản lý sản phẩm', description: 'Quản lý catalog sản phẩm' },
     { path: ROUTES.ADMIN_CATEGORIES, label: 'Quản lý danh mục', description: 'Quản lý danh mục sản phẩm' },
+    { path: ROUTES.ADMIN_ORDERS, label: 'Quản lý đơn hàng', description: 'Theo dõi và xử lý đơn hàng' },
     { path: ROUTES.ADMIN_DISPUTES, label: 'Quản lý tranh chấp', description: 'Xử lý tranh chấp đơn hàng' },
     { path: ROUTES.ADMIN_REFUNDS, label: 'Quản lý hoàn tiền', description: 'Xử lý yêu cầu hoàn tiền' },
+    { path: ROUTES.ADMIN_SETTINGS, label: 'Cài đặt hệ thống', description: 'Cấu hình tổng thể hệ thống' },
+    { path: ROUTES.ADMIN_REPORTS, label: 'Báo cáo chi tiết', description: 'Báo cáo và thống kê kinh doanh' },
   ];
 
   const availableEndpoints = [
@@ -109,12 +112,12 @@ const RoutesOverview: React.FC = () => {
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600">✅</div>
                 <div className="text-sm text-gray-600 mt-2">UI Components hoàn thành</div>
-                <div className="text-lg font-semibold text-gray-800">12/12</div>
+                <div className="text-lg font-semibold text-gray-800">15/15</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-600">🔗</div>
                 <div className="text-sm text-gray-600 mt-2">Routes được cấu hình</div>
-                <div className="text-lg font-semibold text-gray-800">15/15</div>
+                <div className="text-lg font-semibold text-gray-800">18/18</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600">🚀</div>

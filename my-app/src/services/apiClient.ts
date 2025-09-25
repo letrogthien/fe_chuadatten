@@ -11,4 +11,15 @@ const apiClient = axios.create({
   },
 });
 
+// User Service Client
+export const userServiceClient = axios.create({
+  baseURL: `${DOMAIN}/api/v1/user-service`,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+
+
 export default apiClient;

@@ -32,10 +32,15 @@ import { ROUTES } from '../constants/routes';
 import AdminAnalyticsDashboard from '../assets/pages/AdminAnalyticsDashboard';
 import AdminCategoryManagement from '../assets/pages/AdminCategoryManagement';
 import AdminDashboard from '../assets/pages/AdminDashboard';
+import AdminDeviceManager from '../assets/pages/AdminDeviceManager';
 import AdminDisputeManagement from '../assets/pages/AdminDisputeManagement';
+import AdminKycManagement from '../assets/pages/AdminKycManagement';
+import AdminOrderManagement from '../assets/pages/AdminOrderManagement';
 import AdminOverview from '../assets/pages/AdminOverview';
 import AdminProductManagement from '../assets/pages/AdminProductManagement';
 import AdminRefundManagement from '../assets/pages/AdminRefundManagement';
+import AdminReports from '../assets/pages/AdminReports';
+import AdminSettings from '../assets/pages/AdminSettings';
 import AdminUserManagement from '../assets/pages/AdminUserManagement';
 import ProductSearch from '../assets/pages/ProductSearch';
 import RoutesOverview from '../assets/pages/RoutesOverview';
@@ -192,6 +197,14 @@ const router = createBrowserRouter([
         element: <AdminUserManagement />,
       },
       {
+        path: "kyc",
+        element: <AdminKycManagement />,
+      },
+      {
+        path: "devices", 
+        element: <AdminDeviceManager />,
+      },
+      {
         path: "products",
         element: <AdminProductManagement />,
       },
@@ -210,6 +223,18 @@ const router = createBrowserRouter([
       {
         path: "disputes",
         element: <AdminDisputeManagement />,
+      },
+      {
+        path: "orders",
+        element: <AdminOrderManagement />,
+      },
+      {
+        path: "settings",
+        element: <AdminSettings />,
+      },
+      {
+        path: "reports",
+        element: <AdminReports />,
       },
     ],
   },

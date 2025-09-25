@@ -12,3 +12,13 @@ const apiClient = axios.create({
 });
 
 export default apiClient;
+
+
+// Product Service Client
+export const productServiceClient = axios.create({
+  baseURL: `${DOMAIN}/api/v1/product-service`,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});

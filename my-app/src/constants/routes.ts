@@ -29,6 +29,8 @@ export const ROUTES = {
   ADMIN_ORDERS: '/admin/orders',
   ADMIN_DISPUTES: '/admin/disputes',
   ADMIN_ANALYTICS: '/admin/analytics',
+  ADMIN_SETTINGS: '/admin/settings',
+  ADMIN_REPORTS: '/admin/reports',
 } as const;
 
 // Route labels for navigation
@@ -62,6 +64,8 @@ export const ROUTE_LABELS = {
   [ROUTES.ADMIN_ORDERS]: 'Order Management',
   [ROUTES.ADMIN_DISPUTES]: 'Dispute Management',
   [ROUTES.ADMIN_ANALYTICS]: 'Analytics Dashboard',
+  [ROUTES.ADMIN_SETTINGS]: 'System Settings',
+  [ROUTES.ADMIN_REPORTS]: 'Reports & Analytics',
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;

@@ -1,136 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import type { paths } from '../../api-types/userService';
+import { userServiceClient } from '../../services/apiClient';
+import { formatCurrency, formatDate } from '../../utils/dateUtils';
 
-// Sample data cho user management
-const sampleUserData = {
-  users: [
-    {
-      id: "user-001",
-      username: "gamer_pro_2024",
-      email: "gamer.pro@email.com",
-      fullName: "Nguyễn Văn Anh",
-      phoneNumber: "+84987654321",
-      role: "USER",
-      isActive: true,
-      isEmailVerified: true,
-      isPhoneVerified: true,
-      registrationDate: "2024-01-15T10:30:00Z",
-      lastLoginDate: "2024-12-20T14:25:00Z",
-      totalPurchases: 15,
-      totalSpent: 12500000,
-      averageOrderValue: 833333,
-      favoriteCategories: ["Liên Quân Mobile", "PUBG Mobile"],
-      accountStatus: "ACTIVE",
-      kycStatus: "VERIFIED",
-      riskLevel: "LOW"
-    },
-    {
-      id: "user-002",
-      username: "mobile_legend_king",
-      email: "ml.king@email.com", 
-      fullName: "Trần Thị Bình",
-      phoneNumber: "+84912345678",
-      role: "USER",
-      isActive: true,
-      isEmailVerified: true,
-      isPhoneVerified: false,
-      registrationDate: "2024-02-20T09:15:00Z",
-      lastLoginDate: "2024-12-19T16:40:00Z",
-      totalPurchases: 8,
-      totalSpent: 3200000,
-      averageOrderValue: 400000,
-      favoriteCategories: ["Free Fire", "Liên Quân Mobile"],
-      accountStatus: "ACTIVE",
-      kycStatus: "PENDING",
-      riskLevel: "MEDIUM"
-    },
-    {
-      id: "user-003",
-      username: "steam_collector",
-      email: "steam.collector@email.com",
-      fullName: "Lê Minh Hoàng",
-      phoneNumber: "+84923456789",
-      role: "SELLER",
-      isActive: true,
-      isEmailVerified: true,
-      isPhoneVerified: true,
-      registrationDate: "2024-01-10T14:20:00Z",
-      lastLoginDate: "2024-12-18T11:30:00Z",
-      totalPurchases: 45,
-      totalSpent: 28900000,
-      averageOrderValue: 642222,
-      favoriteCategories: ["Steam Games", "Valorant"],
-      accountStatus: "ACTIVE",
-      kycStatus: "VERIFIED",
-      riskLevel: "LOW",
-      sellerInfo: {
-        storeName: "PC Game Store",
-        totalSales: 89,
-        totalEarnings: 15600000,
-        rating: 4.6,
-        productCount: 25
-      }
-    },
-    {
-      id: "user-004",
-      username: "ff_diamond_shop",
-      email: "ff.diamond@email.com",
-      fullName: "Phạm Thanh Tùng",
-      phoneNumber: "+84934567890",
-      role: "SELLER",
-      isActive: false,
-      isEmailVerified: true,
-      isPhoneVerified: true,
-      registrationDate: "2024-03-05T16:45:00Z",
-      lastLoginDate: "2024-12-10T08:20:00Z",
-      totalPurchases: 3,
-      totalSpent: 890000,
-      averageOrderValue: 296667,
-      favoriteCategories: ["Free Fire"],
-      accountStatus: "SUSPENDED",
-      kycStatus: "REJECTED",
-      riskLevel: "HIGH",
-      sellerInfo: {
-        storeName: "FF Kingdom",
-        totalSales: 156,
-        totalEarnings: 8900000,
-        rating: 4.2,
-        productCount: 12
-      },
-      suspensionReason: "Vi phạm quy định bán hàng nhiều lần"
-    },
-    {
-      id: "user-005",
-      username: "admin_system",
-      email: "admin@gamemarket.com",
-      fullName: "Admin System",
-      phoneNumber: "+84900000000",
-      role: "ADMIN",
-      isActive: true,
-      isEmailVerified: true,
-      isPhoneVerified: true,
-      registrationDate: "2024-01-01T00:00:00Z",
-      lastLoginDate: "2024-12-20T09:15:00Z",
-      totalPurchases: 0,
-      totalSpent: 0,
-      averageOrderValue: 0,
-      favoriteCategories: [],
-      accountStatus: "ACTIVE",
-      kycStatus: "VERIFIED",
-      riskLevel: "SYSTEM"
-    }
-  ],
-  statistics: {
-    totalUsers: 5,
-    activeUsers: 4,
-    suspendedUsers: 1,
-    verifiedUsers: 3,
-    totalCustomers: 2,
-    totalSellers: 2,
-    totalAdmins: 1,
-    newUsersThisMonth: 12,
-    totalRevenue: 45490000
-  }
-};
+type UserListResponse = paths['/api/v1/user-service/admin/users']['get']['responses']['200']['content']['*/*'];
+type UserStatsResponse = paths['/api/v1/user-service/admin/users/stats']['get']['responses']['200']['content']['*/*'];
+type LoginHistoryResponse = paths['/api/v1/user-service/admin/login-history/{userId}']['get']['responses']['200']['content']['*/*'];
+
+// Interface for user data structure from API
 
 interface UserFilters {
   role: string;
@@ -139,39 +16,101 @@ interface UserFilters {
   riskLevel: string;
   isEmailVerified: string;
   isPhoneVerified: string;
+  searchText: string;
+}
+
+interface SortConfig {
+  key: string;
+  direction: 'asc' | 'desc';
 }
 
 const AdminUserManagement: React.FC = () => {
-  const [userData] = useState(sampleUserData);
+  const [userData, setUserData] = useState<any>({ users: [], statistics: null });
+  const [userStats, setUserStats] = useState<any>(null);
   const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [userLoginHistory, setUserLoginHistory] = useState<any>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showSuspensionModal, setShowSuspensionModal] = useState(false);
   const [suspensionReason, setSuspensionReason] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: '', direction: 'asc' });
   const [filters, setFilters] = useState<UserFilters>({
     role: '',
     accountStatus: '',
     kycStatus: '',
     riskLevel: '',
     isEmailVerified: '',
-    isPhoneVerified: ''
+    isPhoneVerified: '',
+    searchText: ''
   });
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    }).format(amount);
+  // Load user data on component mount
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([loadUserStats(), loadUserData()]);
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      setLoading(true);
+      const response = await userServiceClient.get('/admin/users');
+      console.log('Users API Response:', response.data);
+      
+      if (response.data?.data) {
+        setUserData({ 
+          users: response.data.data.content || response.data.data || [],
+          statistics: userStats // Use userStats from the stats API
+        });
+      }
+    } catch (error) {
+      console.error('Error loading users:', error);
+      alert('Không thể tải danh sách người dùng. Vui lòng thử lại.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Intl.DateTimeFormat('vi-VN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(dateString));
+  const loadUserStats = async () => {
+    try {
+      const response = await userServiceClient.get('/admin/users/stats');
+      console.log('Stats API Response:', response.data);
+      
+      if (response.data?.data) {
+        setUserStats(response.data.data);
+        // Update userData with statistics
+        setUserData((prev: any) => ({
+          ...prev,
+          statistics: response.data.data
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading user stats:', error);
+      alert('Không thể tải thống kê người dùng. Vui lòng thử lại.');
+    }
   };
+
+  const loadUserLoginHistory = async (userId: string) => {
+    try {
+      const response = await userServiceClient.get(`/admin/login-history/${userId}`);
+      if (response.data?.data) {
+        setUserLoginHistory(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error loading login history:', error);
+    }
+  };
+
+
 
   const getRoleBadge = (role: string) => {
     const roleColors: { [key: string]: string } = {
@@ -258,30 +197,63 @@ const AdminUserManagement: React.FC = () => {
   };
 
   const handleSuspendUser = async (userId: string, reason: string) => {
-    console.log('Suspending user:', userId, reason);
-    // Gọi API suspend user
-    alert(`Đã tạm khóa người dùng: ${userId}\nLý do: ${reason}`);
-    setShowSuspensionModal(false);
-    setSuspensionReason('');
+    try {
+      setLoading(true);
+      await userServiceClient.post(`/admin/users/${userId}/suspend`, {
+        reason: reason
+      });
+      alert(`Đã tạm khóa người dùng: ${userId}\nLý do: ${reason}`);
+      setShowSuspensionModal(false);
+      setSuspensionReason('');
+      // Reload user data
+      loadUserData();
+    } catch (error) {
+      console.error('Error suspending user:', error);
+      alert('Có lỗi xảy ra khi tạm khóa người dùng');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleActivateUser = async (userId: string) => {
-    console.log('Activating user:', userId);
-    // Gọi API activate user
-    alert(`Đã kích hoạt người dùng: ${userId}`);
+    try {
+      setLoading(true);
+      await userServiceClient.post(`/admin/users/${userId}/approve`);
+      alert(`Đã kích hoạt người dùng: ${userId}`);
+      // Reload user data
+      loadUserData();
+    } catch (error) {
+      console.error('Error activating user:', error);
+      alert('Có lỗi xảy ra khi kích hoạt người dùng');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteUser = async (userId: string) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa người dùng này? Hành động này không thể hoàn tác.')) {
-      console.log('Deleting user:', userId);
-      // Gọi API delete user
-      alert(`Đã xóa người dùng: ${userId}`);
+      try {
+        setLoading(true);
+        await userServiceClient.delete(`/admin/users/${userId}`);
+        alert(`Đã xóa người dùng: ${userId}`);
+        // Reload user data
+        loadUserData();
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        alert('Có lỗi xảy ra khi xóa người dùng');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const handleViewDetail = (user: any) => {
+  const handleViewDetail = async (user: any) => {
     setSelectedUser(user);
     setShowDetailModal(true);
+    // Load login history for this user
+    if (user.id) {
+      await loadUserLoginHistory(user.id);
+    }
   };
 
   const openSuspensionModal = (user: any) => {
@@ -289,18 +261,64 @@ const AdminUserManagement: React.FC = () => {
     setShowSuspensionModal(true);
   };
 
-  // Lọc người dùng dựa trên filters
-  const filteredUsers = userData.users.filter((user) => {
-    if (filters.role && user.role !== filters.role) return false;
-    if (filters.accountStatus && user.accountStatus !== filters.accountStatus) return false;
-    if (filters.kycStatus && user.kycStatus !== filters.kycStatus) return false;
-    if (filters.riskLevel && user.riskLevel !== filters.riskLevel) return false;
-    if (filters.isEmailVerified === 'true' && !user.isEmailVerified) return false;
-    if (filters.isEmailVerified === 'false' && user.isEmailVerified) return false;
-    if (filters.isPhoneVerified === 'true' && !user.isPhoneVerified) return false;
-    if (filters.isPhoneVerified === 'false' && user.isPhoneVerified) return false;
-    return true;
-  });
+  const handleSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  // Lọc và sắp xếp người dùng
+  const filteredUsers = (userData?.users || [])
+    .filter((user: any) => {
+      // Text search
+      if (filters.searchText) {
+        const searchLower = filters.searchText.toLowerCase();
+        const searchMatch = 
+          (user.fullName || '').toLowerCase().includes(searchLower) ||
+          (user.username || user.displayName || '').toLowerCase().includes(searchLower) ||
+          (user.email || '').toLowerCase().includes(searchLower) ||
+          (user.phoneNumber || '').toLowerCase().includes(searchLower);
+        if (!searchMatch) return false;
+      }
+      
+      // Other filters
+      if (filters.role && user.role !== filters.role) return false;
+      if (filters.accountStatus && user.accountStatus !== filters.accountStatus) return false;
+      if (filters.kycStatus && user.kycStatus !== filters.kycStatus) return false;
+      if (filters.riskLevel && user.riskLevel !== filters.riskLevel) return false;
+      if (filters.isEmailVerified === 'true' && !user.isEmailVerified) return false;
+      if (filters.isEmailVerified === 'false' && user.isEmailVerified) return false;
+      if (filters.isPhoneVerified === 'true' && !user.isPhoneVerified) return false;
+      if (filters.isPhoneVerified === 'false' && user.isPhoneVerified) return false;
+      return true;
+    })
+    .sort((a: any, b: any) => {
+      if (!sortConfig.key) return 0;
+      
+      let aValue = a[sortConfig.key];
+      let bValue = b[sortConfig.key];
+      
+      // Handle nested properties like sellerInfo.rating
+      if (sortConfig.key.includes('.')) {
+        const keys = sortConfig.key.split('.');
+        aValue = keys.reduce((obj, key) => obj?.[key], a);
+        bValue = keys.reduce((obj, key) => obj?.[key], b);
+      }
+      
+      // Handle null/undefined values
+      if (aValue === null || aValue === undefined) aValue = '';
+      if (bValue === null || bValue === undefined) bValue = '';
+      
+      // Convert to lowercase for string comparison
+      if (typeof aValue === 'string') aValue = aValue.toLowerCase();
+      if (typeof bValue === 'string') bValue = bValue.toLowerCase();
+      
+      if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
 
   const clearFilters = () => {
     setFilters({
@@ -309,7 +327,8 @@ const AdminUserManagement: React.FC = () => {
       kycStatus: '',
       riskLevel: '',
       isEmailVerified: '',
-      isPhoneVerified: ''
+      isPhoneVerified: '',
+      searchText: ''
     });
   };
 
@@ -348,7 +367,7 @@ const AdminUserManagement: React.FC = () => {
               <div className="ml-3">
                 <p className="text-xs font-medium text-gray-500">Tổng</p>
                 <p className="text-xl font-semibold text-gray-900">
-                  {userData.statistics.totalUsers}
+                  {userStats?.totalUsers || userData?.statistics?.totalUsers || 0}
                 </p>
               </div>
             </div>
@@ -364,7 +383,7 @@ const AdminUserManagement: React.FC = () => {
               <div className="ml-3">
                 <p className="text-xs font-medium text-gray-500">Hoạt động</p>
                 <p className="text-xl font-semibold text-green-600">
-                  {userData.statistics.activeUsers}
+                  {userStats?.activeUsers || userData?.statistics?.activeUsers || 0}
                 </p>
               </div>
             </div>
@@ -380,7 +399,7 @@ const AdminUserManagement: React.FC = () => {
               <div className="ml-3">
                 <p className="text-xs font-medium text-gray-500">Tạm khóa</p>
                 <p className="text-xl font-semibold text-red-600">
-                  {userData.statistics.suspendedUsers}
+                  {userStats?.suspendedUsers || userData?.statistics?.suspendedUsers || 0}
                 </p>
               </div>
             </div>
@@ -396,7 +415,7 @@ const AdminUserManagement: React.FC = () => {
               <div className="ml-3">
                 <p className="text-xs font-medium text-gray-500">KYC</p>
                 <p className="text-xl font-semibold text-purple-600">
-                  {userData.statistics.verifiedUsers}
+                  {userStats?.verifiedUsers || userData?.statistics?.verifiedUsers || 0}
                 </p>
               </div>
             </div>
@@ -412,7 +431,7 @@ const AdminUserManagement: React.FC = () => {
               <div className="ml-3">
                 <p className="text-xs font-medium text-gray-500">Khách hàng</p>
                 <p className="text-xl font-semibold text-blue-600">
-                  {userData.statistics.totalCustomers}
+                  {userStats?.totalCustomers || userData?.statistics?.totalCustomers || 0}
                 </p>
               </div>
             </div>
@@ -428,7 +447,7 @@ const AdminUserManagement: React.FC = () => {
               <div className="ml-3">
                 <p className="text-xs font-medium text-gray-500">Người bán</p>
                 <p className="text-xl font-semibold text-green-600">
-                  {userData.statistics.totalSellers}
+                  {userStats?.totalSellers || userData?.statistics?.totalSellers || 0}
                 </p>
               </div>
             </div>
@@ -444,7 +463,7 @@ const AdminUserManagement: React.FC = () => {
               <div className="ml-3">
                 <p className="text-xs font-medium text-gray-500">Admin</p>
                 <p className="text-xl font-semibold text-indigo-600">
-                  {userData.statistics.totalAdmins}
+                  {userStats?.totalAdmins || userData?.statistics?.totalAdmins || 0}
                 </p>
               </div>
             </div>
@@ -460,7 +479,7 @@ const AdminUserManagement: React.FC = () => {
               <div className="ml-3">
                 <p className="text-xs font-medium text-gray-500">Mới/tháng</p>
                 <p className="text-xl font-semibold text-yellow-600">
-                  {userData.statistics.newUsersThisMonth}
+                  {userStats?.newUsersThisMonth || userData?.statistics?.newUsersThisMonth || 0}
                 </p>
               </div>
             </div>
@@ -477,6 +496,18 @@ const AdminUserManagement: React.FC = () => {
             >
               Xóa bộ lọc
             </button>
+          </div>
+          
+          {/* Search Box */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Tìm kiếm</label>
+            <input
+              type="text"
+              placeholder="Tìm theo tên, username, email, số điện thoại..."
+              value={filters.searchText}
+              onChange={(e) => setFilters(prev => ({ ...prev, searchText: e.target.value }))}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
@@ -569,23 +600,68 @@ const AdminUserManagement: React.FC = () => {
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-medium text-gray-900">
-                Danh sách người dùng ({filteredUsers.length})
+                Danh sách người dùng 
+                {!loading && (
+                  <span className="text-blue-600">
+                    ({filteredUsers.length})
+                  </span>
+                )}
               </h3>
               <div className="text-sm text-gray-500">
-                Hiển thị {filteredUsers.length} / {userData.users.length} người dùng
+                {loading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                    Đang tải...
+                  </div>
+                ) : (
+                  <>
+                    <span>Hiển thị {filteredUsers.length} / {userData?.users?.length || 0} người dùng</span>
+                    {filters.searchText && (
+                      <span className="ml-2 text-blue-600">
+                        (Tìm kiếm: "{filters.searchText}")
+                      </span>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>
           
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <span className="ml-3 text-gray-600">Đang tải dữ liệu người dùng...</span>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Người dùng
+                  <th 
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSort('fullName')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Người dùng</span>
+                      {sortConfig.key === 'fullName' && (
+                        <span className="text-blue-600">
+                          {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Vai trò
+                  <th 
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSort('role')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Vai trò</span>
+                      {sortConfig.key === 'role' && (
+                        <span className="text-blue-600">
+                          {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Xác thực
@@ -593,11 +669,31 @@ const AdminUserManagement: React.FC = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Thống kê
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Trạng thái
+                  <th 
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSort('accountStatus')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Trạng thái</span>
+                      {sortConfig.key === 'accountStatus' && (
+                        <span className="text-blue-600">
+                          {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Hoạt động
+                  <th 
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSort('registrationDate')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Hoạt động</span>
+                      {sortConfig.key === 'registrationDate' && (
+                        <span className="text-blue-600">
+                          {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                        </span>
+                      )}
+                    </div>
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Hành động
@@ -605,14 +701,14 @@ const AdminUserManagement: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredUsers.map((user) => (
+                {filteredUsers.map((user: any) => (
                   <tr key={user.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
-                        <p className="text-sm text-gray-500">@{user.username}</p>
-                        <p className="text-xs text-gray-400">{user.email}</p>
-                        <p className="text-xs text-gray-400">{user.phoneNumber}</p>
+                        <p className="text-sm font-medium text-gray-900">{user.fullName || 'N/A'}</p>
+                        <p className="text-sm text-gray-500">@{user.username || user.displayName || 'N/A'}</p>
+                        <p className="text-xs text-gray-400">{user.email || 'N/A'}</p>
+                        <p className="text-xs text-gray-400">{user.phoneNumber || 'N/A'}</p>
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -642,13 +738,13 @@ const AdminUserManagement: React.FC = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-xs space-y-1">
-                        <p><span className="text-gray-500">Mua:</span> {user.totalPurchases}</p>
-                        <p><span className="text-gray-500">Chi:</span> {formatCurrency(user.totalSpent)}</p>
+                        <p><span className="text-gray-500">Mua:</span> {user.totalPurchases || 0}</p>
+                        <p><span className="text-gray-500">Chi:</span> {formatCurrency(user.totalSpent || 0)}</p>
                         {user.sellerInfo && (
                           <>
-                            <p><span className="text-gray-500">Bán:</span> {user.sellerInfo.totalSales}</p>
-                            <p><span className="text-gray-500">Thu:</span> {formatCurrency(user.sellerInfo.totalEarnings)}</p>
-                            <p><span className="text-gray-500">Đánh giá:</span> ⭐ {user.sellerInfo.rating}</p>
+                            <p><span className="text-gray-500">Bán:</span> {user.sellerInfo.totalSales || 0}</p>
+                            <p><span className="text-gray-500">Thu:</span> {formatCurrency(user.sellerInfo.totalEarnings || 0)}</p>
+                            <p><span className="text-gray-500">Đánh giá:</span> ⭐ {user.sellerInfo.rating || 'N/A'}</p>
                           </>
                         )}
                       </div>
@@ -709,10 +805,11 @@ const AdminUserManagement: React.FC = () => {
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+              </table>
+            </div>
+          )}
           
-          {filteredUsers.length === 0 && (
+          {!loading && filteredUsers.length === 0 && (
             <div className="text-center py-12">
               <div className="text-gray-400 text-6xl mb-4">👥</div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">Không tìm thấy người dùng</h3>
